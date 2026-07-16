@@ -143,6 +143,47 @@ function App() {
     setVisibleCount(18);
   }, [activeCategory, searchCriteria]);
 
+  useEffect(() => {
+    if (!token) return;
+
+    // 1. Check absolute expiration on load (7 days = 604800000 ms)
+    const loginTime = localStorage.getItem('vip_login_time');
+    if (loginTime && Date.now() - parseInt(loginTime) > 7 * 24 * 60 * 60 * 1000) {
+      handleLogout();
+      alert("Your session has expired. Please log in again.");
+      return;
+    }
+
+    // 2. Inactivity timer check (2 hours = 7200000 ms)
+    const updateActivity = () => {
+      localStorage.setItem('vip_last_activity', Date.now().toString());
+    };
+
+    window.addEventListener('mousemove', updateActivity);
+    window.addEventListener('click', updateActivity);
+    window.addEventListener('scroll', updateActivity);
+    window.addEventListener('keydown', updateActivity);
+    window.addEventListener('touchstart', updateActivity);
+
+    // Periodically check inactivity (every 30 seconds)
+    const checkInterval = setInterval(() => {
+      const lastActivity = localStorage.getItem('vip_last_activity');
+      if (lastActivity && Date.now() - parseInt(lastActivity) > 2 * 60 * 60 * 1000) {
+        handleLogout();
+        alert("You have been logged out due to 2 hours of inactivity.");
+      }
+    }, 30000);
+
+    return () => {
+      window.removeEventListener('mousemove', updateActivity);
+      window.removeEventListener('click', updateActivity);
+      window.removeEventListener('scroll', updateActivity);
+      window.removeEventListener('keydown', updateActivity);
+      window.removeEventListener('touchstart', updateActivity);
+      clearInterval(checkInterval);
+    };
+  }, [token]);
+
   const logActivity = async (action, details = '') => {
     try {
       await fetch(`${API_BASE_URL}/activities`, {
@@ -196,6 +237,8 @@ function App() {
         setToken(data.token);
         localStorage.setItem('vip_user', JSON.stringify(data.user));
         localStorage.setItem('vip_token', data.token);
+        localStorage.setItem('vip_login_time', Date.now().toString());
+        localStorage.setItem('vip_last_activity', Date.now().toString());
         logActivity("Login Success", `User: ${data.user.name}`);
         return true;
       } else {
@@ -222,6 +265,8 @@ function App() {
     setActivities([]);
     localStorage.removeItem('vip_user');
     localStorage.removeItem('vip_token');
+    localStorage.removeItem('vip_login_time');
+    localStorage.removeItem('vip_last_activity');
     setView('home');
   };
 
