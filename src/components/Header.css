@@ -173,6 +173,7 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   transition: all 0.3s;
+  flex-shrink: 0;
 }
 
 .login-btn:hover {
@@ -215,6 +216,7 @@
   height: 42px;
   border-radius: 50%;
   transition: all 0.3s;
+  flex-shrink: 0;
 }
 
 .cart-icon-btn:hover {
@@ -267,6 +269,7 @@
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s;
+  flex-shrink: 0;
 }
 
 .user-profile:hover {
@@ -355,6 +358,7 @@
   cursor: pointer;
   padding: 0;
   z-index: 1005;
+  flex-shrink: 0;
 }
 
 .hamburger-bar {
