@@ -120,10 +120,14 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
               <div 
                 className="user-menu-container"
                 ref={userMenuRef}
-                onMouseEnter={() => setShowUserMenu(true)}
-                onMouseLeave={() => setShowUserMenu(false)}
+                onPointerEnter={(e) => {
+                  if (e.pointerType === 'mouse') setShowUserMenu(true);
+                }}
+                onPointerLeave={(e) => {
+                  if (e.pointerType === 'mouse') setShowUserMenu(false);
+                }}
               >
-                <div className="user-profile" onClick={() => setShowUserMenu(true)}>
+                <div className="user-profile" onClick={() => setShowUserMenu(!showUserMenu)}>
                   👤 {user.name.split(' ')[0]}
                 </div>
                 {showUserMenu && (
