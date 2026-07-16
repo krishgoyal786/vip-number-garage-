@@ -96,7 +96,7 @@ const Cart = ({ isOpen, onClose, cartItems, onRemove, onCheckout, appliedCoupon,
             </div>
 
             <button className="checkout-btn" onClick={onCheckout}>
-              Proceed to Payment
+              Proceed
             </button>
           </div>
         )}
