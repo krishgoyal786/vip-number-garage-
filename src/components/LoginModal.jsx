@@ -9,6 +9,7 @@ const LoginModal = ({ isOpen, onClose, onLogin, onSendOtp }) => {
   const [step, setStep] = useState(1); // 1: Info, 2: OTP
   const [isLoading, setIsLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [sendCooldown, setSendCooldown] = useState(0);
 
   React.useEffect(() => {
     let timer;
@@ -17,6 +18,14 @@ const LoginModal = ({ isOpen, onClose, onLogin, onSendOtp }) => {
     }
     return () => clearTimeout(timer);
   }, [resendCooldown, isOpen]);
+
+  React.useEffect(() => {
+    let timer;
+    if (sendCooldown > 0 && isOpen) {
+      timer = setTimeout(() => setSendCooldown(sendCooldown - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [sendCooldown, isOpen]);
 
   if (!isOpen) return null;
 
@@ -46,7 +55,8 @@ const LoginModal = ({ isOpen, onClose, onLogin, onSendOtp }) => {
     
     if (success) {
       setStep(2);
-      setResendCooldown(30);
+      setResendCooldown(60);
+      setSendCooldown(60);
     }
   };
 
@@ -56,7 +66,8 @@ const LoginModal = ({ isOpen, onClose, onLogin, onSendOtp }) => {
     const success = await onSendOtp(email);
     setIsLoading(false);
     if (success) {
-      setResendCooldown(30);
+      setResendCooldown(60);
+      setSendCooldown(60);
       alert("A new OTP has been sent to your email.");
     }
   };
@@ -143,8 +154,8 @@ const LoginModal = ({ isOpen, onClose, onLogin, onSendOtp }) => {
                 required 
               />
             </div>
-            <button type="submit" className="action-btn" disabled={isLoading}>
-              {isLoading ? "Sending OTP..." : "Send OTP"}
+            <button type="submit" className="action-btn" disabled={isLoading || sendCooldown > 0}>
+              {isLoading ? "Sending OTP..." : sendCooldown > 0 ? `Resend in ${sendCooldown}s` : "Send OTP"}
             </button>
           </form>
         ) : (

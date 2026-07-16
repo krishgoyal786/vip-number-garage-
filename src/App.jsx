@@ -61,7 +61,14 @@ function App() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isMyOrdersOpen, setIsMyOrdersOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem('vip_cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('vip_cart', JSON.stringify(cartItems));
+  }, [cartItems]);
   
   // Auth State
   const [user, setUser] = useState(() => {
