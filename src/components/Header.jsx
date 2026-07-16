@@ -120,10 +120,10 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
                 className="user-menu-container"
                 ref={userMenuRef}
                 onMouseEnter={() => {
-                  if (window.innerWidth > 1150) setShowUserMenu(true);
+                  if (window.matchMedia('(hover: hover)').matches) setShowUserMenu(true);
                 }}
                 onMouseLeave={() => {
-                  if (window.innerWidth > 1150) setShowUserMenu(false);
+                  if (window.matchMedia('(hover: hover)').matches) setShowUserMenu(false);
                 }}
               >
                 <div className="user-profile" onClick={() => setShowUserMenu(!showUserMenu)}>
