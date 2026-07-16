@@ -1,90 +1,153 @@
-.about-us-container {
-  padding: 40px 20px;
+.about-us-section {
+  padding: 60px 0;
+}
+
+.about-us-box {
+  background: linear-gradient(145deg, #121212, #1a1a1a);
+  padding: 60px 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
+}
+
+.about-intro-text {
+  text-align: center;
   max-width: 800px;
-  margin: 0 auto;
+  margin: 0 auto 50px;
+  color: var(--text-gray);
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.about-story-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.story-col h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  color: var(--primary-gold);
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  padding-bottom: 10px;
+}
+
+.story-col p {
+  color: var(--text-gray);
+  font-size: 0.95rem;
   line-height: 1.8;
 }
 
-.about-hero {
+.about-why-us {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.about-why-us h3 {
   text-align: center;
-  margin-bottom: 60px;
-  padding: 40px 20px;
-  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-  border-radius: 15px;
-  border: 1px solid #333;
+  font-family: 'Cinzel', serif;
+  font-size: 1.6rem;
+  color: var(--text-white);
+  margin-bottom: 35px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.about-hero h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
+.why-us-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+}
+
+.why-us-card {
+  background: rgba(26, 26, 26, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 30px 25px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.why-us-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(212, 175, 55, 0.3);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.05);
+}
+
+.why-icon {
+  font-size: 1.5rem;
   color: var(--primary-gold);
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+  margin-bottom: 15px;
 }
 
-.about-hero p {
-  color: var(--text-gray);
+.why-us-card h4 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
   font-size: 1.1rem;
-}
-
-.about-section {
-  margin-bottom: 40px;
-}
-
-.about-section h2 {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-  border-left: 4px solid var(--primary-gold);
-  padding-left: 15px;
-}
-
-.about-section p {
-  color: var(--text-gray);
-  font-size: 1rem;
-}
-
-.about-section ul {
-  color: var(--text-gray);
-  padding-left: 20px;
-}
-
-.about-section li {
+  color: var(--text-white);
   margin-bottom: 10px;
+}
+
+.why-us-card p {
+  color: var(--text-gray);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.about-visit {
+  text-align: center;
+  padding: 40px 30px;
+  background: rgba(18, 18, 18, 0.5);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  margin-top: 50px;
+}
+
+.about-visit h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  color: var(--primary-gold);
+  margin-bottom: 15px;
+}
+
+.about-visit p {
+  color: var(--text-gray);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  max-width: 800px;
+  margin: 0 auto 20px;
+}
+
+.office-address {
+  font-style: normal;
+  color: var(--text-white);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  border-top: 1px dashed rgba(212, 175, 55, 0.2);
+  display: inline-block;
+  padding-top: 15px;
+  margin-top: 10px;
 }
 
 @media (max-width: 768px) {
-  .about-hero {
+  .about-us-box {
+    padding: 40px 20px;
+  }
+  .about-story-row {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .why-us-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .about-visit {
     padding: 30px 15px;
-    margin-bottom: 30px;
-  }
-  .about-hero h1 {
-    font-size: 1.6rem;
-  }
-  .about-hero p {
-    font-size: 0.95rem;
-  }
-  .about-section h2 {
-    font-size: 1.35rem;
-    margin-bottom: 15px;
-    padding-left: 10px;
-  }
-  .about-section p, .about-section li {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .about-us-container {
-    padding: 30px 12px;
-  }
-  .about-hero {
-    padding: 25px 12px;
-    margin-bottom: 25px;
-  }
-  .about-hero h1 {
-    font-size: 1.35rem;
-  }
-  .about-hero p {
-    font-size: 0.88rem;
   }
 }

@@ -63,7 +63,7 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
                 About Us
                 <div className="sub-menu">
                   <div onClick={() => handleNavClick('about-us')}>Our Story</div>
-                  <div onClick={() => handleNavClick('why-choose-us')}>Why Choose Us</div>
+                  <div onClick={() => handleNavClick('about-why-us')}>Why Choose Us</div>
                   <div onClick={() => handleNavClick('faq-section')}>FAQs</div>
                   <div onClick={() => handleNavClick('partner-program')}>Partner Program</div>
                   <div onClick={() => handleNavClick('privacy-policy')}>Privacy Policy</div>

@@ -6,7 +6,6 @@ import CategoryTabs from './components/CategoryTabs';
 import NumberList from './components/NumberList';
 import HowItWorks from './components/HowItWorks';
 import AboutUs from './components/AboutUs';
-import WhyChooseUs from './components/WhyChooseUs';
 import ContactUs from './components/ContactUs';
 import PartnerProgram from './components/PartnerProgram';
 import FAQ from './components/FAQ';
@@ -901,8 +900,6 @@ function App() {
               <div id="sell-number"><SellNumberForm onSubmit={handleSellRequestSubmit} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
             </div>
             <div id="how-it-works"><HowItWorks /></div>
-            <div id="about-us"><AboutUs /></div>
-            <div id="why-choose-us"><WhyChooseUs /></div>
             <div id="partner-program">
               <PartnerProgram 
                 onSubmitQuery={handleAddQuery} 
@@ -915,8 +912,9 @@ function App() {
                 }}
               />
             </div>
-            <div id="contact-us"><ContactUs /></div>
             <div id="faq-section"><FAQ onSubmitQuery={handleAddQuery} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
+            <div id="about-us"><AboutUs /></div>
+            <div id="contact-us"><ContactUs /></div>
           </>
         ) : view === 'dashboard' ? (
           <Dashboard 
@@ -1040,8 +1038,8 @@ function App() {
           <div className="footer-col">
             <h3>Support & Legal</h3>
             <ul>
-              <li onClick={() => scrollToSection('about-us')}>Our Story</li>
-              <li onClick={() => scrollToSection('why-choose-us')}>Why Choose Us</li>
+              <li onClick={() => scrollToSection('about-us')}>About Us</li>
+              <li onClick={() => scrollToSection('about-why-us')}>Why Choose Us</li>
               <li onClick={() => scrollToSection('faq-section')}>FAQs</li>
               <li onClick={() => scrollToSection('numerology-consultation')}>Numerology</li>
               <li onClick={() => { setView('privacy'); window.scrollTo(0, 0); }}>Privacy Policy</li>
