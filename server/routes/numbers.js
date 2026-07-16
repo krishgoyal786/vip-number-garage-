@@ -9,11 +9,113 @@ const { adminAuth } = require('../middleware/auth');
 // Multer Setup for File Uploads
 const upload = multer({ dest: 'uploads/' });
 
-// GET all numbers (Public)
+// GET all numbers (Public with pagination/filters, or Admin Mode)
 router.get('/', async (req, res) => {
   try {
-    const numbers = await Number.find();
-    res.json(numbers);
+    const { 
+      page = 1, 
+      limit = 18, 
+      category = 'All', 
+      carrier = 'all', 
+      minPrice, 
+      maxPrice, 
+      excludeDigits, 
+      numerologySum,
+      searchDigits, // comma-separated digits for position search, e.g. "*,*,*,*,*,9,8,5,*,*"
+      sort = 'none',
+      adminMode = 'false'
+    } = req.query;
+
+    const query = {};
+    
+    // Only exclude sold numbers for public users
+    if (adminMode !== 'true') {
+      query.isSold = false;
+    }
+
+    // 1. Category filter
+    if (category && category !== 'All') {
+      if (category === 'Offer Zone') {
+        query.offerPrice = { $gt: 0 };
+      } else {
+        query.category = category;
+      }
+    }
+
+    // 2. Carrier filter
+    if (carrier && carrier !== 'all') {
+      query.operator = { $regex: new RegExp(`^${carrier}$`, 'i') };
+    }
+
+    // 3. Price Filter (checking offerPrice or price)
+    const min = parseInt(minPrice) || 0;
+    const max = parseInt(maxPrice) || Infinity;
+    if (minPrice || maxPrice) {
+      query.$or = [
+        { offerPrice: { $exists: true, $gte: min, $lte: max } },
+        { offerPrice: { $exists: false }, price: { $gte: min, $lte: max } }
+      ];
+    }
+
+    // 4. Exclude Digits
+    if (excludeDigits && excludeDigits.trim() !== '') {
+      const excludedArray = excludeDigits.replace(/[^0-9]/g, '').split('');
+      if (excludedArray.length > 0) {
+        const regexStr = excludedArray.join('|');
+        query.cleanNumber = { $not: new RegExp(regexStr) };
+      }
+    }
+
+    // 5. Numerology single digit sum
+    if (numerologySum !== '' && numerologySum !== undefined) {
+      query.singleDigitSum = parseInt(numerologySum);
+    }
+
+    // 6. Position-based digit matching (searchDigits)
+    if (searchDigits) {
+      const digitsArr = searchDigits.split(',');
+      if (digitsArr.some(d => d !== '*' && d !== '')) {
+        let regexPattern = '^';
+        digitsArr.forEach(digit => {
+          if (digit === '*' || digit === '') {
+            regexPattern += '[0-9]';
+          } else {
+            regexPattern += digit;
+          }
+        });
+        regexPattern += '$';
+        query.cleanNumber = { $regex: new RegExp(regexPattern) };
+      }
+    }
+
+    // Sort order
+    let sortObj = {};
+    if (sort === 'low-high') {
+      sortObj = { price: 1 };
+    } else if (sort === 'high-low') {
+      sortObj = { price: -1 };
+    }
+
+    // Execute paginated query
+    const pageNum = parseInt(page);
+    let limitNum = parseInt(limit);
+    if (limit === 'all' || isNaN(limitNum)) {
+      limitNum = 100000;
+    }
+    const skip = (pageNum - 1) * limitNum;
+
+    const total = await Number.countDocuments(query);
+    const numbers = await Number.find(query)
+      .sort(sortObj)
+      .skip(skip)
+      .limit(limitNum);
+
+    res.json({
+      total,
+      page: pageNum,
+      totalPages: Math.ceil(total / limitNum),
+      numbers
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

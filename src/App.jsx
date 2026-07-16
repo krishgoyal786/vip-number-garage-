@@ -45,6 +45,11 @@ function App() {
   
   // Data States
   const [inventory, setInventory] = useState([]);
+  const [catalogNumbers, setCatalogNumbers] = useState([]);
+  const [totalNumbers, setTotalNumbers] = useState(0);
+  const [catalogPage, setCatalogPage] = useState(1);
+  const [catalogLoading, setCatalogLoading] = useState(false);
+  const [featuredNumbers, setFeaturedNumbers] = useState([]);
   const [queries, setQueries] = useState([]);
   const [orders, setOrders] = useState([]);
   const [requests, setRequests] = useState([]);
@@ -77,20 +82,62 @@ function App() {
   });
   const [token, setToken] = useState(localStorage.getItem('vip_token'));
 
+  const fetchCatalog = async (pageNumber = 1, append = false) => {
+    setCatalogLoading(true);
+    try {
+      const { digits, budget, carrier, numerologySum, excludeDigits, sort } = searchCriteria;
+      
+      const params = new URLSearchParams({
+        page: pageNumber,
+        limit: 18,
+        category: activeCategory,
+        carrier: carrier,
+        minPrice: budget.min,
+        maxPrice: budget.max,
+        excludeDigits: excludeDigits,
+        numerologySum: numerologySum,
+        sort: sort,
+        searchDigits: digits.join(',')
+      });
+
+      const res = await fetch(`${API_BASE_URL}/numbers?${params.toString()}`);
+      if (res.ok) {
+        const data = await res.json();
+        setTotalNumbers(data.total);
+        setCatalogPage(data.page);
+        if (append) {
+          setCatalogNumbers(prev => [...prev, ...data.numbers]);
+        } else {
+          setCatalogNumbers(data.numbers);
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching catalog:", err);
+    } finally {
+      setCatalogLoading(false);
+    }
+  };
+
   const fetchData = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const [numsRes, catsRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/numbers`),
-        fetch(`${API_BASE_URL}/categories`)
+      // 1. Fetch categories and featured numbers (Hot Deals - category Offer Zone, limit 15)
+      const [catsRes, featuredRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/categories`),
+        fetch(`${API_BASE_URL}/numbers?category=Offer Zone&limit=15`)
       ]);
-      if (!numsRes.ok || !catsRes.ok) throw new Error("Connection failed.");
-      setInventory(await numsRes.json());
+      
+      if (!catsRes.ok || !featuredRes.ok) throw new Error("Connection failed.");
+      
       setCategories(await catsRes.json());
+      const featuredData = await featuredRes.json();
+      setFeaturedNumbers(featuredData.numbers || []);
 
+      // 2. Fetch full inventory for admin dashboard if user is admin
       if (token && user?.role === 'admin') {
-        const [queriesRes, ordersRes, reqsRes, activityRes, sellReqsRes, couponsRes, consultationsRes] = await Promise.all([
+        const [numsRes, queriesRes, ordersRes, reqsRes, activityRes, sellReqsRes, couponsRes, consultationsRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/numbers?limit=100000&adminMode=true`),
           fetch(`${API_BASE_URL}/queries`, { headers: { 'x-auth-token': token } }),
           fetch(`${API_BASE_URL}/orders`, { headers: { 'x-auth-token': token } }),
           fetch(`${API_BASE_URL}/requests`, { headers: { 'x-auth-token': token } }),
@@ -99,6 +146,11 @@ function App() {
           fetch(`${API_BASE_URL}/coupons`, { headers: { 'x-auth-token': token } }),
           fetch(`${API_BASE_URL}/consultations`, { headers: { 'x-auth-token': token } })
         ]);
+        
+        if (numsRes.ok) {
+          const allNums = await numsRes.json();
+          setInventory(allNums.numbers || []);
+        }
         if (queriesRes.ok) setQueries(await queriesRes.json());
         if (ordersRes.ok) setOrders(await ordersRes.json());
         if (reqsRes.ok) setRequests(await reqsRes.json());
@@ -107,6 +159,7 @@ function App() {
         if (couponsRes.ok) setCoupons(await couponsRes.json());
         if (consultationsRes.ok) setConsultations(await consultationsRes.json());
       } else {
+        setInventory([]);
         if (token) {
           try {
             const userOrdersRes = await fetch(`${API_BASE_URL}/orders/my`, { headers: { 'x-auth-token': token } });
@@ -138,6 +191,11 @@ function App() {
   useEffect(() => {
     fetchData();
   }, [token]);
+
+  // Fetch paginated catalog whenever filter criteria changes
+  useEffect(() => {
+    fetchCatalog(1, false);
+  }, [activeCategory, searchCriteria]);
 
   useEffect(() => {
     setVisibleCount(18);
@@ -360,66 +418,7 @@ function App() {
     requestAnimationFrame(animation);
   };
 
-  const getSingleDigitSum = (numberStr) => {
-    const raw = numberStr.replace(/\D/g, '');
-    if (!raw) return 0;
-    const sum = raw.split('').reduce((acc, d) => acc + parseInt(d), 0);
-    return sum === 0 ? 0 : (sum - 1) % 9 + 1;
-  };
 
-  const filteredNumbers = inventory.filter((item) => {
-    try {
-      if (item.isSold) return false;
-      if (activeCategory === 'Offer Zone') { if (!item.offerPrice) return false; }
-      else if (activeCategory !== 'All' && item.category !== activeCategory) { return false; }
-      
-      const rawNumber = (item.number || '').replace(/\D/g, '');
-      const { digits, budget, carrier, numerologySum, excludeDigits } = searchCriteria;
-      
-      // 1. Position-based digit matching
-      const digitMatch = digits.every((searchDigit, index) => {
-        if (searchDigit === '' || searchDigit === '*') return true; 
-        return rawNumber[index] === searchDigit;
-      });
-      if (!digitMatch) return false;
-
-      // 2. Budget price filtering
-      const currentPrice = item.offerPrice || item.price;
-      const min = budget.min !== '' ? parseInt(budget.min) : 0;
-      const max = budget.max !== '' ? parseInt(budget.max) : Infinity;
-      if (currentPrice < min || currentPrice > max) return false;
-
-      // 3. Network carrier filtering
-      if (carrier && carrier !== 'all') {
-        const itemCarrier = item.operator || 'Airtel';
-        if (itemCarrier.toLowerCase() !== carrier.toLowerCase()) return false;
-      }
-
-      // 4. Numerology single digit total filtering
-      if (numerologySum !== '' && numerologySum !== undefined) {
-        const itemSingleSum = getSingleDigitSum(item.number);
-        if (itemSingleSum !== parseInt(numerologySum)) return false;
-      }
-
-      // 5. Exclude digits filtering
-      if (excludeDigits && excludeDigits.trim() !== '') {
-        const excludedList = excludeDigits.replace(/[^0-9]/g, '').split('');
-        const hasExcluded = excludedList.some(d => rawNumber.includes(d));
-        if (hasExcluded) return false;
-      }
-
-      return true;
-    } catch (err) { return false; }
-  }).sort((a, b) => {
-    const { sort } = searchCriteria;
-    const priceA = a.offerPrice || a.price;
-    const priceB = b.offerPrice || b.price;
-    if (sort === 'low-high') return priceA - priceB;
-    if (sort === 'high-low') return priceB - priceA;
-    return 0;
-  });
-
-  const displayedNumbers = filteredNumbers.slice(0, visibleCount);
 
   const addToCart = (item) => {
     if (item.isSold) {
@@ -770,8 +769,11 @@ function App() {
         const updatedOrder = await res.json(); 
         setOrders(orders.map(o => o._id === id ? updatedOrder : o)); 
         // Refresh local inventory so status changes show instantly
-        const numsRes = await fetch(`${API_BASE_URL}/numbers`);
-        if (numsRes.ok) setInventory(await numsRes.json());
+        const numsRes = await fetch(`${API_BASE_URL}/numbers?limit=100000&adminMode=true`);
+        if (numsRes.ok) {
+          const data = await numsRes.json();
+          setInventory(data.numbers || []);
+        }
         return true; 
       }
     } catch (err) {}
@@ -789,8 +791,11 @@ function App() {
         const updatedOrder = await res.json(); 
         setOrders(orders.map(o => o._id === id ? updatedOrder : o)); 
         // Refresh local inventory so status changes show instantly
-        const numsRes = await fetch(`${API_BASE_URL}/numbers`);
-        if (numsRes.ok) setInventory(await numsRes.json());
+        const numsRes = await fetch(`${API_BASE_URL}/numbers?limit=100000&adminMode=true`);
+        if (numsRes.ok) {
+          const data = await numsRes.json();
+          setInventory(data.numbers || []);
+        }
         return true; 
       }
     } catch (err) {}
@@ -910,7 +915,7 @@ function App() {
             <div id="home"><Hero /></div>
             <div id="our-products" style={{ paddingTop: '40px' }}>
               <FeaturedOffers 
-                inventory={inventory} 
+                inventory={featuredNumbers} 
                 onAddToCart={addToCart} 
                 onBuyNow={handleBuyNow} 
                 cartItems={cartItems} 
@@ -941,15 +946,23 @@ function App() {
                 <div style={{ textAlign: 'center', marginBottom: '20px' }}><button onClick={resetAllFilters} className="clear-search-btn">Reset All Filters</button></div>
               )}
               <NumberList 
-                numbers={displayedNumbers} 
+                numbers={catalogNumbers} 
                 onAddToCart={addToCart} 
                 onBuyNow={handleBuyNow} 
                 cartItems={cartItems} 
                 onCompareToggle={handleCompareToggle}
                 compareItems={compareItems}
               />
-              {filteredNumbers.length > visibleCount && (
-                <div style={{ textAlign: 'center', marginTop: '40px' }}><button onClick={() => setVisibleCount(prev => prev + 18)} className="dashboard-btn">Load More Numbers</button></div>
+              {catalogNumbers.length < totalNumbers && (
+                <div style={{ textAlign: 'center', marginTop: '40px' }}>
+                  <button 
+                    onClick={() => fetchCatalog(catalogPage + 1, true)} 
+                    className="dashboard-btn"
+                    disabled={catalogLoading}
+                  >
+                    {catalogLoading ? 'Loading...' : 'Load More Numbers'}
+                  </button>
+                </div>
               )}
               <div id="request-number"><RequestForm onSubmit={handleRequestSubmit} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
               <div id="sell-number"><SellNumberForm onSubmit={handleSellRequestSubmit} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>

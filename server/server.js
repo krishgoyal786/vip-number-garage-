@@ -23,6 +23,23 @@ mongoose.connect(process.env.MONGODB_URI)
           console.warn('⚠️ Note: Could not drop phone_1 index:', err.message);
         }
       });
+
+    // Database Migration: Update existing numbers to have cleanNumber and singleDigitSum
+    const NumberModel = require('./models/Number');
+    NumberModel.find({ $or: [ { cleanNumber: { $exists: false } }, { singleDigitSum: { $exists: false } } ] })
+      .then(async (numbersToMigrate) => {
+        if (numbersToMigrate.length > 0) {
+          console.log(`🔧 Migrating ${numbersToMigrate.length} numbers to include cleanNumber & singleDigitSum...`);
+          for (const num of numbersToMigrate) {
+            num.cleanNumber = num.number.replace(/\D/g, '');
+            const sum = num.cleanNumber.split('').reduce((acc, d) => acc + parseInt(d), 0);
+            num.singleDigitSum = sum === 0 ? 0 : (sum - 1) % 9 + 1;
+            await num.save();
+          }
+          console.log('✅ MongoDB numbers migration complete!');
+        }
+      })
+      .catch((err) => console.error('⚠️ Migration error:', err.message));
   })
   .catch((err) => console.error('❌ MongoDB Connection Error:', err));
 
