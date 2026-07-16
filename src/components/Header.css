@@ -289,7 +289,11 @@
   width: 240px;
   z-index: 100;
   box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-  animation: dropdownFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .user-dropdown::before {
@@ -302,9 +306,13 @@
   background: transparent;
 }
 
-@keyframes dropdownFade {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Hover or Active states trigger visibility */
+.user-menu-container:hover .user-dropdown,
+.user-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .dropdown-item {

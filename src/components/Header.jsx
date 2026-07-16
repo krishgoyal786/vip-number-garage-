@@ -6,7 +6,6 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
   const [animateCart, setAnimateCart] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
-  const hoverOpenedTime = useRef(0);
 
   // Close user dropdown when clicking outside or scrolling
   useEffect(() => {
@@ -120,55 +119,37 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
               <div 
                 className="user-menu-container"
                 ref={userMenuRef}
-                onMouseEnter={() => {
-                  setShowUserMenu(true);
-                  hoverOpenedTime.current = Date.now();
-                }}
-                onMouseLeave={() => {
-                  setShowUserMenu(false);
-                }}
               >
-                <div 
-                  className="user-profile" 
-                  onClick={() => {
-                    if (Date.now() - hoverOpenedTime.current < 600) {
-                      setShowUserMenu(true);
-                    } else {
-                      setShowUserMenu(prev => !prev);
-                    }
-                  }}
-                >
+                <div className="user-profile" onClick={() => setShowUserMenu(!showUserMenu)}>
                   👤 {user.name.split(' ')[0]}
                 </div>
-                {showUserMenu && (
-                  <div className="user-dropdown">
-                    <div className="dropdown-item name"><strong>Name:</strong> {user.name}</div>
-                    <div className="dropdown-item phone"><strong>Mobile:</strong> +91 {user.phone}</div>
-                    <hr />
-                    {!isAdmin && (
-                      <>
-                        <div 
-                          className="dropdown-item orders-link" 
-                          onClick={() => { onMyOrdersClick(); setShowUserMenu(false); }}
-                          style={{ cursor: 'pointer', padding: '10px 15px', color: 'var(--primary-gold)', transition: 'background 0.2s', fontWeight: 'bold' }}
-                        >
-                          🛍️ My Orders & UPCs
-                        </div>
-                        <hr />
-                      </>
-                    )}
-                    <button 
-                      className="logout-btn" 
-                      onClick={() => {
-                        onLogout();
-                        setShowUserMenu(false);
-                        setIsMobileMenuOpen(false);
-                      }}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
+                <div className={`user-dropdown ${showUserMenu ? 'active' : ''}`}>
+                  <div className="dropdown-item name"><strong>Name:</strong> {user.name}</div>
+                  <div className="dropdown-item phone"><strong>Mobile:</strong> +91 {user.phone}</div>
+                  <hr />
+                  {!isAdmin && (
+                    <>
+                      <div 
+                        className="dropdown-item orders-link" 
+                        onClick={() => { onMyOrdersClick(); setShowUserMenu(false); }}
+                        style={{ cursor: 'pointer', padding: '10px 15px', color: 'var(--primary-gold)', transition: 'background 0.2s', fontWeight: 'bold' }}
+                      >
+                        🛍️ My Orders & UPCs
+                      </div>
+                      <hr />
+                    </>
+                  )}
+                  <button 
+                    className="logout-btn" 
+                    onClick={() => {
+                      onLogout();
+                      setShowUserMenu(false);
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
             ) : (
               <button className="login-btn" onClick={onLoginClick}>Login</button>
