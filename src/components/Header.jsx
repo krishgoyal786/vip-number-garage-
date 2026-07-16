@@ -119,6 +119,12 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
               <div 
                 className="user-menu-container"
                 ref={userMenuRef}
+                onMouseEnter={() => {
+                  if (window.innerWidth > 1150) setShowUserMenu(true);
+                }}
+                onMouseLeave={() => {
+                  if (window.innerWidth > 1150) setShowUserMenu(false);
+                }}
               >
                 <div className="user-profile" onClick={() => setShowUserMenu(!showUserMenu)}>
                   👤 {user.name.split(' ')[0]}
