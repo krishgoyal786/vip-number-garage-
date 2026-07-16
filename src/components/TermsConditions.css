@@ -35,10 +35,6 @@
   border-radius: 12px;
   padding: 40px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  max-height: 450px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary-gold) transparent;
 }
 
 .legal-card::-webkit-scrollbar {

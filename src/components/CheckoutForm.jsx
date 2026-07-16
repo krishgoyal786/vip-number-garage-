@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './CheckoutForm.css';
 
-const CheckoutForm = ({ user, totalAmount, onSubmit, onCancel }) => {
+const CheckoutForm = ({ user, totalAmount, onSubmit, onCancel, onPrivacyClick, onTermsClick }) => {
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [details, setDetails] = useState({
@@ -116,11 +116,11 @@ const CheckoutForm = ({ user, totalAmount, onSubmit, onCancel }) => {
             />
             <label htmlFor="checkout-terms-checkbox" className="checkout-checkbox-label">
               I agree to the{" "}
-              <span className="gold-text-link" onClick={() => { onCancel(); setTimeout(() => { document.getElementById('privacy-policy')?.scrollIntoView({ behavior: 'smooth' }); }, 150); }}>
+              <span className="gold-text-link" onClick={onPrivacyClick}>
                 Privacy Policy
               </span>{" "}
               and{" "}
-              <span className="gold-text-link" onClick={() => { onCancel(); setTimeout(() => { document.getElementById('terms-conditions')?.scrollIntoView({ behavior: 'smooth' }); }, 150); }}>
+              <span className="gold-text-link" onClick={onTermsClick}>
                 Terms & Conditions
               </span>
               .

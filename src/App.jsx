@@ -907,8 +907,6 @@ function App() {
             </div>
             <div id="contact-us"><ContactUs /></div>
             <div id="faq-section"><FAQ onSubmitQuery={handleAddQuery} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
-            <div id="privacy-policy" style={{ paddingTop: '20px', display: 'flex', justifyContent: 'center' }}><PrivacyPolicy /></div>
-            <div id="terms-conditions" style={{ paddingTop: '20px', display: 'flex', justifyContent: 'center' }}><TermsConditions /></div>
           </>
         ) : view === 'dashboard' ? (
           <Dashboard 
@@ -942,6 +940,16 @@ function App() {
             onDeliverOrder={handleDeliverOrder}
             onClose={() => setView('home')} 
           />
+        ) : view === 'privacy' ? (
+          <div style={{ position: 'relative', padding: '40px 20px', minHeight: '70vh' }}>
+            <button className="floating-back-btn" onClick={() => setView('home')}>← Back to Home</button>
+            <PrivacyPolicy />
+          </div>
+        ) : view === 'terms' ? (
+          <div style={{ position: 'relative', padding: '40px 20px', minHeight: '70vh' }}>
+            <button className="floating-back-btn" onClick={() => setView('home')}>← Back to Home</button>
+            <TermsConditions />
+          </div>
         ) : null}
       </main>
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} onLogin={handleLogin} onSendOtp={handleSendOtp} />
@@ -954,6 +962,8 @@ function App() {
           totalAmount={cartItems.reduce((sum, i) => sum + (i.offerPrice || i.price), 0) - Math.round((cartItems.reduce((sum, i) => sum + (i.offerPrice || i.price), 0) * (appliedCoupon ? appliedCoupon.discountPercentage : 0)) / 100)} 
           onSubmit={handleFinalPayment} 
           onCancel={() => setIsCheckoutOpen(false)} 
+          onPrivacyClick={() => { setIsCheckoutOpen(false); setView('privacy'); window.scrollTo(0, 0); }}
+          onTermsClick={() => { setIsCheckoutOpen(false); setView('terms'); window.scrollTo(0, 0); }}
         />
       )}
       <FloatingWhatsApp />
@@ -1010,8 +1020,8 @@ function App() {
               <li onClick={() => scrollToSection('why-choose-us')}>Why Choose Us</li>
               <li onClick={() => scrollToSection('faq-section')}>FAQs</li>
               <li onClick={() => scrollToSection('numerology-consultation')}>Numerology</li>
-              <li onClick={() => scrollToSection('privacy-policy')}>Privacy Policy</li>
-              <li onClick={() => scrollToSection('terms-conditions')}>Terms & Conditions</li>
+              <li onClick={() => { setView('privacy'); window.scrollTo(0, 0); }}>Privacy Policy</li>
+              <li onClick={() => { setView('terms'); window.scrollTo(0, 0); }}>Terms & Conditions</li>
             </ul>
           </div>
           
