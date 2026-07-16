@@ -119,14 +119,10 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
               <div 
                 className="user-menu-container"
                 ref={userMenuRef}
-                onMouseEnter={() => {
-                  if (window.matchMedia('(hover: hover)').matches) setShowUserMenu(true);
-                }}
-                onMouseLeave={() => {
-                  if (window.matchMedia('(hover: hover)').matches) setShowUserMenu(false);
-                }}
+                onMouseEnter={() => setShowUserMenu(true)}
+                onMouseLeave={() => setShowUserMenu(false)}
               >
-                <div className="user-profile" onClick={() => setShowUserMenu(!showUserMenu)}>
+                <div className="user-profile">
                   👤 {user.name.split(' ')[0]}
                 </div>
                 {showUserMenu && (
