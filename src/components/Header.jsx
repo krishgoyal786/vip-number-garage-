@@ -6,6 +6,7 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
   const [animateCart, setAnimateCart] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
+  const lastTouchTime = useRef(0);
 
   // Close user dropdown when clicking outside or scrolling
   useEffect(() => {
@@ -119,6 +120,17 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
               <div 
                 className="user-menu-container"
                 ref={userMenuRef}
+                onTouchStart={() => {
+                  lastTouchTime.current = Date.now();
+                }}
+                onMouseEnter={() => {
+                  if (Date.now() - lastTouchTime.current < 500) return;
+                  setShowUserMenu(true);
+                }}
+                onMouseLeave={() => {
+                  if (Date.now() - lastTouchTime.current < 500) return;
+                  setShowUserMenu(false);
+                }}
               >
                 <div className="user-profile" onClick={() => setShowUserMenu(!showUserMenu)}>
                   👤 {user.name.split(' ')[0]}
