@@ -398,6 +398,9 @@ function App() {
       return;
     }
 
+    // Security warning popup about official contact numbers
+    alert("⚠️ IMPORTANT SECURITY WARNING:\n\nWe only deal from our two official numbers:\n📞 +91 98555-98544\n📞 +91 76900-00070\n\nPlease do not transfer any payments to anyone without getting direct verification and confirmation from these two official numbers!");
+
     setIsCartOpen(false);
     setIsCheckoutOpen(true);
   };
