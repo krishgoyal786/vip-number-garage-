@@ -54,25 +54,6 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
 
           {/* Navigation Links */}
           <nav className={`nav-menu ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-            <ul>
-              <li onClick={() => handleNavClick('home')}>Home</li>
-              <li onClick={() => handleNavClick('our-products')}>Find Your Number</li>
-              <li onClick={() => handleNavClick('numerology-consultation')}>Numerology</li>
-              <li onClick={() => handleNavClick('sell-number')}>Sell Number</li>
-              <li className="dropdown-li">
-                About Us
-                <div className="sub-menu">
-                  <div onClick={() => handleNavClick('about-us')}>Our Story</div>
-                  <div onClick={() => handleNavClick('about-why-us')}>Why Choose Us</div>
-                  <div onClick={() => handleNavClick('faq-section')}>FAQs</div>
-                  <div onClick={() => handleNavClick('partner-program')}>Partner Program</div>
-                  <div onClick={() => handleNavClick('privacy-policy')}>Privacy Policy</div>
-                  <div onClick={() => handleNavClick('terms-conditions')}>Terms & Conditions</div>
-                </div>
-              </li>
-              <li onClick={() => handleNavClick('contact-us')}>Contact Us</li>
-            </ul>
-
             {/* Mobile-only actions inside the drawer */}
             <div className="mobile-nav-actions">
               {isAdmin && (
@@ -127,6 +108,25 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
                 </button>
               )}
             </div>
+
+            <ul>
+              <li onClick={() => handleNavClick('home')}>Home</li>
+              <li onClick={() => handleNavClick('our-products')}>Find Your Number</li>
+              <li onClick={() => handleNavClick('numerology-consultation')}>Numerology</li>
+              <li onClick={() => handleNavClick('sell-number')}>Sell Number</li>
+              <li className="dropdown-li">
+                About Us
+                <div className="sub-menu">
+                  <div onClick={() => handleNavClick('about-us')}>Our Story</div>
+                  <div onClick={() => handleNavClick('about-why-us')}>Why Choose Us</div>
+                  <div onClick={() => handleNavClick('faq-section')}>FAQs</div>
+                  <div onClick={() => handleNavClick('partner-program')}>Partner Program</div>
+                  <div onClick={() => handleNavClick('privacy-policy')}>Privacy Policy</div>
+                  <div onClick={() => handleNavClick('terms-conditions')}>Terms & Conditions</div>
+                </div>
+              </li>
+              <li onClick={() => handleNavClick('contact-us')}>Contact Us</li>
+            </ul>
           </nav>
 
           {/* Action buttons */}
