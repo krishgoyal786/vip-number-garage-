@@ -131,7 +131,7 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
                 <div 
                   className="user-profile" 
                   onClick={() => {
-                    if (Date.now() - hoverOpenedTime.current < 300) {
+                    if (Date.now() - hoverOpenedTime.current < 600) {
                       setShowUserMenu(true);
                     } else {
                       setShowUserMenu(prev => !prev);
