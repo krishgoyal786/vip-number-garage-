@@ -576,10 +576,14 @@
 /* Extra small mobile screen adjustments */
 @media (max-width: 576px) {
   .logo {
-    font-size: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    line-height: 1.1 !important;
+    font-size: 13px !important;
   }
   .logo-container {
-    gap: 6px !important;
+    gap: 8px !important;
   }
   .header-logo-img {
     width: 32px !important;
@@ -599,13 +603,6 @@
   .user-profile {
     padding: 6px 10px !important;
     font-size: 0.75rem !important;
-  }
-}
-
-/* Hide logo text on small screens (< 480px) to prevent layout cut-offs */
-@media (max-width: 480px) {
-  .logo {
-    display: none !important;
   }
 }
 
