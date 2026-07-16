@@ -1,10 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './Header.css';
 
 const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNavigate, isAdmin, onDashboardClick, onMyOrdersClick }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [animateCart, setAnimateCart] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
+
+  // Close user dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
 
   // Trigger pop-up animation when cartCount changes
   useEffect(() => {
@@ -96,8 +112,7 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
             {user ? (
               <div 
                 className="user-menu-container"
-                onMouseEnter={() => setShowUserMenu(true)}
-                onMouseLeave={() => setShowUserMenu(false)}
+                ref={userMenuRef}
               >
                 <div className="user-profile" onClick={() => setShowUserMenu(!showUserMenu)}>
                   👤 {user.name.split(' ')[0]}
