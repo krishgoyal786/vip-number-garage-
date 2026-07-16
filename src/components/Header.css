@@ -570,19 +570,31 @@
 }
 
 /* Extra small mobile screen adjustments */
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .logo {
-    font-size: 19px;
+    font-size: 17px !important;
+  }
+  .logo-container {
+    gap: 6px !important;
   }
   .header-logo-img {
-    width: 38px !important;
-    height: 38px !important;
+    width: 32px !important;
+    height: 32px !important;
   }
   .header-inner {
-    padding: 0 12px;
+    padding: 0 10px;
   }
   .header-actions {
-    gap: 10px;
+    gap: 8px !important;
+  }
+  .login-btn {
+    padding: 6px 12px !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.5px !important;
+  }
+  .user-profile {
+    padding: 6px 10px !important;
+    font-size: 0.75rem !important;
   }
 }
 

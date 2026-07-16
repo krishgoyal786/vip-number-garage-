@@ -54,60 +54,7 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
 
           {/* Navigation Links */}
           <nav className={`nav-menu ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-            {/* Mobile-only actions inside the drawer */}
-            <div className="mobile-nav-actions">
-              {isAdmin && (
-                <button 
-                  className="dashboard-btn mobile-action-btn" 
-                  onClick={() => {
-                    onDashboardClick();
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  📊 Dashboard
-                </button>
-              )}
-              
-              {user ? (
-                <div className="mobile-user-info">
-                  <div className="mobile-user-details">
-                    <div className="user-detail-item">👤 <strong>{user.name}</strong></div>
-                    <div className="user-detail-item">📞 +91 {user.phone}</div>
-                  </div>
-                  {!isAdmin && (
-                    <button 
-                      className="dashboard-btn mobile-action-btn" 
-                      onClick={() => {
-                        onMyOrdersClick();
-                        setIsMobileMenuOpen(false);
-                      }}
-                      style={{ marginBottom: '10px', display: 'block', width: '100%' }}
-                    >
-                      🛍️ My Orders & UPCs
-                    </button>
-                  )}
-                  <button 
-                    className="logout-btn mobile-logout-btn" 
-                    onClick={() => {
-                      onLogout();
-                      setIsMobileMenuOpen(false);
-                    }}
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <button 
-                  className="login-btn mobile-action-btn" 
-                  onClick={() => {
-                    onLoginClick();
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  Login / Register
-                </button>
-              )}
-            </div>
+
 
             <ul>
               <li onClick={() => handleNavClick('home')}>Home</li>
@@ -148,7 +95,7 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
             
             {user ? (
               <div 
-                className="user-menu-container desktop-only"
+                className="user-menu-container"
                 onMouseEnter={() => setShowUserMenu(true)}
                 onMouseLeave={() => setShowUserMenu(false)}
               >
@@ -186,7 +133,7 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
                 )}
               </div>
             ) : (
-              <button className="login-btn desktop-only" onClick={onLoginClick}>Login</button>
+              <button className="login-btn" onClick={onLoginClick}>Login</button>
             )}
 
             {/* Hamburger Toggle */}
