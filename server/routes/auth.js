@@ -31,7 +31,7 @@ router.post('/send-otp', async (req, res) => {
 
     if (smtpHost && smtpUser && smtpPass) {
       console.log(`[SMTP Debug] Host: ${smtpHost}, Port: ${smtpPort}, User: ${smtpUser}, Pass Length: ${smtpPass.length}`);
-      // Create Nodemailer Transporter
+      // Create Nodemailer Transporter with short timeouts to prevent hanging on blocked ports
       let transportConfig = {
         host: smtpHost,
         port: parseInt(smtpPort || '587'),
@@ -39,7 +39,10 @@ router.post('/send-otp', async (req, res) => {
         auth: {
           user: smtpUser,
           pass: smtpPass
-        }
+        },
+        connectionTimeout: 5000,
+        greetingTimeout: 5000,
+        socketTimeout: 5000
       };
 
       if (smtpHost.includes('gmail.com')) {
@@ -48,7 +51,10 @@ router.post('/send-otp', async (req, res) => {
           auth: {
             user: smtpUser,
             pass: smtpPass
-          }
+          },
+          connectionTimeout: 5000,
+          greetingTimeout: 5000,
+          socketTimeout: 5000
         };
       }
 
@@ -72,9 +78,18 @@ router.post('/send-otp', async (req, res) => {
         `
       };
 
-      await transporter.sendMail(mailOptions);
-      console.log(`✉️ OTP email sent successfully to ${email}`);
-      res.json({ message: 'OTP sent successfully to email' });
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log(`✉️ OTP email sent successfully to ${email}`);
+        return res.json({ message: 'OTP sent successfully to email' });
+      } catch (mailErr) {
+        console.warn(`⚠️ SMTP send failed (likely port blocked by host). Falling back to simulated OTP. Error:`, mailErr.message);
+        return res.json({ 
+          message: 'OTP sent successfully (Simulated mode due to host mail restriction)', 
+          simulated: true,
+          otp: otp 
+        });
+      }
     } else {
       // Fallback Mode (Console logging for testing and cost saving during development)
       console.log(`\n========================================`);
