@@ -252,6 +252,17 @@ function App() {
   };
 
   const scrollToSection = (sectionId) => {
+    if (sectionId === 'privacy-policy') {
+      setView('privacy');
+      window.scrollTo(0, 0);
+      return;
+    }
+    if (sectionId === 'terms-conditions') {
+      setView('terms');
+      window.scrollTo(0, 0);
+      return;
+    }
+
     let targetId = sectionId;
     if (targetId === 'our-products') {
       targetId = 'positional-search-section';
