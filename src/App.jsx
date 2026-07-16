@@ -146,15 +146,7 @@ function App() {
   useEffect(() => {
     if (!token) return;
 
-    // 1. Check absolute expiration on load (7 days = 604800000 ms)
-    const loginTime = localStorage.getItem('vip_login_time');
-    if (loginTime && Date.now() - parseInt(loginTime) > 7 * 24 * 60 * 60 * 1000) {
-      handleLogout();
-      alert("Your session has expired. Please log in again.");
-      return;
-    }
-
-    // 2. Inactivity timer check (2 hours = 7200000 ms)
+    // Inactivity timer check (2 hours = 7200000 ms)
     const updateActivity = () => {
       localStorage.setItem('vip_last_activity', Date.now().toString());
     };
