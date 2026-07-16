@@ -355,6 +355,15 @@
   }
   .programs-grid {
     grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  .program-card {
+    padding: 30px 20px;
+  }
+  .card-badge {
+    position: static;
+    display: inline-block;
+    margin-bottom: 15px;
   }
   .flow-steps {
     flex-direction: column;
@@ -366,9 +375,21 @@
   }
   .form-group-row {
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
   }
   .application-form-container {
     padding: 30px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .partner-box {
+    padding: 30px 15px;
+  }
+  .program-card {
+    padding: 25px 15px;
+  }
+  .application-form-container {
+    padding: 25px 15px;
   }
 }
