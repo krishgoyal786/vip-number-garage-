@@ -227,7 +227,7 @@ const PartnerProgram = ({ onSubmitQuery, user, showFormOnly = false, initialProg
                 <strong>Dashboard Tracking</strong>: Real-time insights into your coupon usage and earnings.
               </li>
             </ul>
-            <button className="apply-card-btn" onClick={() => onApplyClick('influencer')}>Apply Now →</button>
+            <button className="apply-card-btn gold-apply-btn" onClick={() => onApplyClick('influencer')}>Apply Now →</button>
           </div>
 
           {/* Business Program Card */}
