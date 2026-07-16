@@ -287,6 +287,38 @@
   box-shadow: none;
 }
 
+.apply-card-btn {
+  background-color: transparent;
+  color: var(--primary-gold);
+  border: 1px solid var(--primary-gold);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 25px;
+}
+
+.apply-card-btn:hover {
+  background-color: var(--primary-gold);
+  color: var(--bg-black);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+}
+
+.gold-apply-btn {
+  background-color: var(--primary-gold);
+  color: var(--bg-black);
+}
+
+.gold-apply-btn:hover {
+  background-color: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
+
 /* Success Message */
 .success-msg {
   text-align: center;

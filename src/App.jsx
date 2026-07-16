@@ -41,6 +41,7 @@ function App() {
     excludeDigits: ''
   });
   const [view, setView] = useState('home'); 
+  const [partnerProgramType, setPartnerProgramType] = useState('influencer');
   const [compareItems, setCompareItems] = useState([]); 
   
   // Data States
@@ -903,7 +904,16 @@ function App() {
             <div id="about-us"><AboutUs /></div>
             <div id="why-choose-us"><WhyChooseUs /></div>
             <div id="partner-program">
-              <PartnerProgram onSubmitQuery={handleAddQuery} user={user} onLoginClick={() => setIsLoginOpen(true)} />
+              <PartnerProgram 
+                onSubmitQuery={handleAddQuery} 
+                user={user} 
+                showFormOnly={false}
+                onApplyClick={(type) => {
+                  setPartnerProgramType(type);
+                  setView('partner-apply');
+                  window.scrollTo(0, 0);
+                }}
+              />
             </div>
             <div id="contact-us"><ContactUs /></div>
             <div id="faq-section"><FAQ onSubmitQuery={handleAddQuery} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
@@ -950,6 +960,20 @@ function App() {
             <button className="floating-back-btn" onClick={() => setView('home')}>← Back to Home</button>
             <TermsConditions />
           </div>
+        ) : view === 'partner-apply' ? (
+          <PartnerProgram 
+            onSubmitQuery={handleAddQuery} 
+            user={user} 
+            showFormOnly={true} 
+            initialProgramType={partnerProgramType} 
+            onBackClick={() => {
+              setView('home');
+              setTimeout(() => {
+                const element = document.getElementById('partner-program');
+                if (element) element.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
+            }}
+          />
         ) : null}
       </main>
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} onLogin={handleLogin} onSendOtp={handleSendOtp} />

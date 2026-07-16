@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './PartnerProgram.css';
 
-const PartnerProgram = ({ onSubmitQuery, user }) => {
+const PartnerProgram = ({ onSubmitQuery, user, showFormOnly = false, initialProgramType = 'influencer', onApplyClick, onBackClick }) => {
   const [formData, setFormData] = useState({
     name: user ? user.name : '',
     email: '',
     phone: user ? user.phone : '',
-    programType: 'influencer', // 'influencer' or 'business'
+    programType: initialProgramType, // 'influencer' or 'business'
     businessName: '',
     platformLink: '',
     message: ''
@@ -14,6 +14,11 @@ const PartnerProgram = ({ onSubmitQuery, user }) => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Sync pre-selected program type when changed in parent
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, programType: initialProgramType }));
+  }, [initialProgramType]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,94 +62,13 @@ const PartnerProgram = ({ onSubmitQuery, user }) => {
     }
   };
 
-  return (
-    <section className="partner-container">
-      <div className="partner-box">
-        <h2 className="section-title">Partner Programs</h2>
-        <div className="title-underline"></div>
-        <p className="partner-intro">
-          Grow with us! Join the <strong>VipNumberGarage Partner Network</strong>. Whether you are an influencer with a loyal audience or a business seeking mutually beneficial alliances, we have customized programs to reward your influence and integration.
-        </p>
-
-        <div className="programs-grid">
-          {/* Influencer Program Card */}
-          <div className="program-card influencer-card">
-            <div className="card-badge">INFLUENCER</div>
-            <h3>Influencer Program</h3>
-            <p className="card-tagline">Monetize your reach by sharing premium numbers.</p>
-            <ul className="benefits-list">
-              <li>
-                <span className="bullet">✦</span> 
-                <strong>Custom Coupon Code</strong>: Get a unique coupon code (e.g., <code>VIPINFLUENCER10</code>) to share with your audience.
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <strong>Audience Discount</strong>: Your followers receive an instant discount on any VIP number they purchase.
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <strong>Influencer Rewards</strong>: Earn attractive cash payouts or platform credits for every transaction made with your code.
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <strong>Dashboard Tracking</strong>: Real-time insights into your coupon usage and earnings.
-              </li>
-            </ul>
-          </div>
-
-          {/* Business Program Card */}
-          <div className="program-card business-card">
-            <div className="card-badge gold-badge">BUSINESS PARTNER</div>
-            <h3>Business with Us</h3>
-            <p className="card-tagline">Incorporate premium mobile numbers into your service portfolio.</p>
-            <ul className="benefits-list">
-              <li>
-                <span className="bullet">✦</span> 
-                <strong>Affiliate API & Tools</strong>: Offer VIP numbers to your existing client base under your own brand or as an affiliate.
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <strong>Shared Coupon Incentives</strong>: Provide exclusive discounts to your corporate clients or network.
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <strong>High Margin Returns</strong>: Secure special dealer pricing and high-percentage referral commissions.
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <strong>Legal & Transfer Support</strong>: We handle all registration and transfer logistics, while you focus on sales.
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* How It Works Visual Flow */}
-        <div className="flow-section">
-          <h3>How It Works</h3>
-          <div className="flow-steps">
-            <div className="step">
-              <div className="step-num">1</div>
-              <h4>Join the Network</h4>
-              <p>Apply below. We will review your profile/business and issue a customized coupon code.</p>
-            </div>
-            <div className="step-arrow">➔</div>
-            <div className="step">
-              <div className="step-num">2</div>
-              <h4>Promote & Share</h4>
-              <p>Share your coupon code on social media, websites, or directly with your clients.</p>
-            </div>
-            <div className="step-arrow">➔</div>
-            <div className="step">
-              <div className="step-num">3</div>
-              <h4>Earn Benefits</h4>
-              <p>Your users get discounts instantly, and you receive automated payouts or credits per purchase.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Application Form */}
-        <div className="application-form-container">
-          <h3>Apply Now</h3>
+  // If showFormOnly is true, render ONLY the form page view
+  if (showFormOnly) {
+    return (
+      <section className="partner-container" style={{ minHeight: '80vh', padding: '40px 20px' }}>
+        <button className="floating-back-btn" onClick={onBackClick}>← Back to Partners</button>
+        <div className="application-form-container" style={{ marginTop: '40px' }}>
+          <h3>Apply for Partner Program</h3>
           <p className="form-subtitle">Let us know which program suits you, and our team will get in touch within 24 hours.</p>
           
           {isSubmitted ? (
@@ -152,7 +76,7 @@ const PartnerProgram = ({ onSubmitQuery, user }) => {
               <span className="success-icon">✓</span>
               <h4>Thank you for your interest!</h4>
               <p>Your partner application has been submitted successfully. Our partnership coordinator will contact you shortly.</p>
-              <button onClick={() => setIsSubmitted(false)} className="reset-btn">Submit Another Application</button>
+              <button onClick={() => { setIsSubmitted(false); onBackClick(); }} className="reset-btn">Return to Home</button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="partner-form">
@@ -264,6 +188,97 @@ const PartnerProgram = ({ onSubmitQuery, user }) => {
               </div>
             </form>
           )}
+        </div>
+      </section>
+    );
+  }
+
+  // Home Page View (without embedded form, but with action buttons)
+  return (
+    <section className="partner-container">
+      <div className="partner-box">
+        <h2 className="section-title">Partner Programs</h2>
+        <div className="title-underline"></div>
+        <p className="partner-intro">
+          Grow with us! Join the <strong>VipNumberGarage Partner Network</strong>. Whether you are an influencer with a loyal audience or a business seeking mutually beneficial alliances, we have customized programs to reward your influence and integration.
+        </p>
+
+        <div className="programs-grid">
+          {/* Influencer Program Card */}
+          <div className="program-card influencer-card">
+            <div className="card-badge">INFLUENCER</div>
+            <h3>Influencer Program</h3>
+            <p className="card-tagline">Monetize your reach by sharing premium numbers.</p>
+            <ul className="benefits-list">
+              <li>
+                <span className="bullet">✦</span> 
+                <strong>Custom Coupon Code</strong>: Get a unique coupon code (e.g., <code>VIPINFLUENCER10</code>) to share with your audience.
+              </li>
+              <li>
+                <span className="bullet">✦</span> 
+                <strong>Audience Discount</strong>: Your followers receive an instant discount on any VIP number they purchase.
+              </li>
+              <li>
+                <span className="bullet">✦</span> 
+                <strong>Influencer Rewards</strong>: Earn attractive cash payouts or platform credits for every transaction made with your code.
+              </li>
+              <li>
+                <span className="bullet">✦</span> 
+                <strong>Dashboard Tracking</strong>: Real-time insights into your coupon usage and earnings.
+              </li>
+            </ul>
+            <button className="apply-card-btn" onClick={() => onApplyClick('influencer')}>Apply Now →</button>
+          </div>
+
+          {/* Business Program Card */}
+          <div className="program-card business-card">
+            <div className="card-badge gold-badge">BUSINESS PARTNER</div>
+            <h3>Business with Us</h3>
+            <p className="card-tagline">Incorporate premium mobile numbers into your service portfolio.</p>
+            <ul className="benefits-list">
+              <li>
+                <span className="bullet">✦</span> 
+                <strong>Affiliate API & Tools</strong>: Offer VIP numbers to your existing client base under your own brand or as an affiliate.
+              </li>
+              <li>
+                <span className="bullet">✦</span> 
+                <strong>Shared Coupon Incentives</strong>: Provide exclusive discounts to your corporate clients or network.
+              </li>
+              <li>
+                <span className="bullet">✦</span> 
+                <strong>High Margin Returns</strong>: Secure special dealer pricing and high-percentage referral commissions.
+              </li>
+              <li>
+                <span className="bullet">✦</span> 
+                <strong>Legal & Transfer Support</strong>: We handle all registration and transfer logistics, while you focus on sales.
+              </li>
+            </ul>
+            <button className="apply-card-btn gold-apply-btn" onClick={() => onApplyClick('business')}>Apply Now →</button>
+          </div>
+        </div>
+
+        {/* How It Works Visual Flow */}
+        <div className="flow-section">
+          <h3>How It Works</h3>
+          <div className="flow-steps">
+            <div className="step">
+              <div className="step-num">1</div>
+              <h4>Join the Network</h4>
+              <p>Apply online. We will review your profile/business and issue a customized coupon code.</p>
+            </div>
+            <div className="step-arrow">➔</div>
+            <div className="step">
+              <div className="step-num">2</div>
+              <h4>Promote & Share</h4>
+              <p>Share your coupon code on social media, websites, or directly with your clients.</p>
+            </div>
+            <div className="step-arrow">➔</div>
+            <div className="step">
+              <div className="step-num">3</div>
+              <h4>Earn Benefits</h4>
+              <p>Your users get discounts instantly, and you receive automated payouts or credits per purchase.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
