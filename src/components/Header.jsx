@@ -120,19 +120,10 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
               <div 
                 className="user-menu-container"
                 ref={userMenuRef}
-                onTouchStart={() => {
-                  lastTouchTime.current = Date.now();
-                }}
-                onMouseEnter={() => {
-                  if (Date.now() - lastTouchTime.current < 500) return;
-                  setShowUserMenu(true);
-                }}
-                onMouseLeave={() => {
-                  if (Date.now() - lastTouchTime.current < 500) return;
-                  setShowUserMenu(false);
-                }}
+                onMouseEnter={() => setShowUserMenu(true)}
+                onMouseLeave={() => setShowUserMenu(false)}
               >
-                <div className="user-profile" onClick={() => setShowUserMenu(!showUserMenu)}>
+                <div className="user-profile" onClick={() => setShowUserMenu(true)}>
                   👤 {user.name.split(' ')[0]}
                 </div>
                 {showUserMenu && (
