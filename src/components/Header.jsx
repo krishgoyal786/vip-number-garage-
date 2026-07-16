@@ -7,18 +7,24 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
 
-  // Close user dropdown when clicking outside
+  // Close user dropdown when clicking outside or scrolling
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleCloseMenu = (event) => {
+      if (event.type === 'scroll') {
+        setShowUserMenu(false);
+        return;
+      }
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setShowUserMenu(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('mousedown', handleCloseMenu);
+    document.addEventListener('touchstart', handleCloseMenu);
+    window.addEventListener('scroll', handleCloseMenu, { passive: true });
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('mousedown', handleCloseMenu);
+      document.removeEventListener('touchstart', handleCloseMenu);
+      window.removeEventListener('scroll', handleCloseMenu);
     };
   }, []);
 
