@@ -1,0 +1,1042 @@
+import { useState, useEffect } from 'react';
+import Header from './components/Header';
+import Hero from './components/Hero';
+import PositionalSearch from './components/PositionalSearch';
+import CategoryTabs from './components/CategoryTabs';
+import NumberList from './components/NumberList';
+import HowItWorks from './components/HowItWorks';
+import AboutUs from './components/AboutUs';
+import WhyChooseUs from './components/WhyChooseUs';
+import ContactUs from './components/ContactUs';
+import PartnerProgram from './components/PartnerProgram';
+import FAQ from './components/FAQ';
+import LoginModal from './components/LoginModal';
+import Cart from './components/Cart';
+import Dashboard from './components/Dashboard';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
+import RequestForm from './components/RequestForm';
+import SellNumberForm from './components/SellNumberForm';
+import FeaturedOffers from './components/FeaturedOffers';
+import CheckoutForm from './components/CheckoutForm';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsConditions from './components/TermsConditions';
+import AstroNumerologySection from './components/AstroNumerologySection';
+import BookingModal from './components/BookingModal';
+import CompareDrawer from './components/CompareDrawer';
+import MyOrdersModal from './components/MyOrdersModal';
+import './App.css';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+
+function App() {
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [visibleCount, setVisibleCount] = useState(18);
+  const [categories, setCategories] = useState([]);
+  const [searchCriteria, setSearchCriteria] = useState({ 
+    digits: Array(10).fill(''), 
+    budget: { min: '', max: '' },
+    sort: 'none',
+    carrier: 'all',
+    numerologySum: '',
+    excludeDigits: ''
+  });
+  const [view, setView] = useState('home'); 
+  const [compareItems, setCompareItems] = useState([]); 
+  
+  // Data States
+  const [inventory, setInventory] = useState([]);
+  const [queries, setQueries] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [requests, setRequests] = useState([]);
+  const [sellRequests, setSellRequests] = useState([]);
+  const [coupons, setCoupons] = useState([]);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [activities, setActivities] = useState([]);
+  const [consultations, setConsultations] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isMyOrdersOpen, setIsMyOrdersOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  
+  // Auth State
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('vip_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [token, setToken] = useState(localStorage.getItem('vip_token'));
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const [numsRes, catsRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/numbers`),
+        fetch(`${API_BASE_URL}/categories`)
+      ]);
+      if (!numsRes.ok || !catsRes.ok) throw new Error("Connection failed.");
+      setInventory(await numsRes.json());
+      setCategories(await catsRes.json());
+
+      if (token && user?.role === 'admin') {
+        const [queriesRes, ordersRes, reqsRes, activityRes, sellReqsRes, couponsRes, consultationsRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/queries`, { headers: { 'x-auth-token': token } }),
+          fetch(`${API_BASE_URL}/orders`, { headers: { 'x-auth-token': token } }),
+          fetch(`${API_BASE_URL}/requests`, { headers: { 'x-auth-token': token } }),
+          fetch(`${API_BASE_URL}/activities`, { headers: { 'x-auth-token': token } }),
+          fetch(`${API_BASE_URL}/sell-requests`, { headers: { 'x-auth-token': token } }),
+          fetch(`${API_BASE_URL}/coupons`, { headers: { 'x-auth-token': token } }),
+          fetch(`${API_BASE_URL}/consultations`, { headers: { 'x-auth-token': token } })
+        ]);
+        if (queriesRes.ok) setQueries(await queriesRes.json());
+        if (ordersRes.ok) setOrders(await ordersRes.json());
+        if (reqsRes.ok) setRequests(await reqsRes.json());
+        if (activityRes.ok) setActivities(await activityRes.json());
+        if (sellReqsRes.ok) setSellRequests(await sellReqsRes.json());
+        if (couponsRes.ok) setCoupons(await couponsRes.json());
+        if (consultationsRes.ok) setConsultations(await consultationsRes.json());
+      } else {
+        if (token) {
+          try {
+            const userOrdersRes = await fetch(`${API_BASE_URL}/orders/my`, { headers: { 'x-auth-token': token } });
+            if (userOrdersRes.ok) {
+              setOrders(await userOrdersRes.json());
+            } else {
+              setOrders([]);
+            }
+          } catch (err) {
+            setOrders([]);
+          }
+        } else {
+          setOrders([]);
+        }
+        setQueries([]);
+        setRequests([]);
+        setSellRequests([]);
+        setActivities([]);
+        setCoupons([]);
+        setConsultations([]);
+      }
+    } catch (err) {
+      setError("The Backend Server is not running.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [token]);
+
+  useEffect(() => {
+    setVisibleCount(18);
+  }, [activeCategory, searchCriteria]);
+
+  const logActivity = async (action, details = '') => {
+    try {
+      await fetch(`${API_BASE_URL}/activities`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user: user ? { name: user.name, phone: user.phone } : undefined, action, details })
+      });
+    } catch (err) {}
+  };
+
+  const handleSendOtp = async (email) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/send-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        if (data.simulated && data.otp) {
+          alert(`[Dev Mode] OTP sent to ${email}: ${data.otp}`);
+        } else {
+          alert(`OTP sent successfully to ${email}`);
+        }
+        return true;
+      } else {
+        alert(data.message || "Failed to send OTP.");
+        return false;
+      }
+    } catch (err) {
+      alert("Error connecting to server to send OTP.");
+      return false;
+    }
+  };
+
+  const handleLogin = async (loginData) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginData) 
+      });
+      if (res.ok) {
+        const data = await res.json();
+        // Clear cart if switching users
+        if (user && user.email !== data.user.email) {
+          setCartItems([]);
+        }
+        setAppliedCoupon(null); // Clear coupon
+        setUser(data.user);
+        setToken(data.token);
+        localStorage.setItem('vip_user', JSON.stringify(data.user));
+        localStorage.setItem('vip_token', data.token);
+        logActivity("Login Success", `User: ${data.user.name}`);
+        return true;
+      } else {
+        const data = await res.json();
+        alert(data.message || "Invalid OTP or login failed.");
+        return false;
+      }
+    } catch (err) { 
+      alert("Error connecting to server."); 
+      return false;
+    }
+  };
+
+  const handleLogout = () => {
+    logActivity("Logout", `User: ${user?.name}`);
+    setUser(null);
+    setToken(null);
+    setCartItems([]); // Clear the cart
+    setAppliedCoupon(null); // Clear coupon
+    setQueries([]);
+    setOrders([]);
+    setRequests([]);
+    setSellRequests([]);
+    setActivities([]);
+    localStorage.removeItem('vip_user');
+    localStorage.removeItem('vip_token');
+    setView('home');
+  };
+
+  const resetAllFilters = () => {
+    setActiveCategory('All');
+    setVisibleCount(20);
+    setSearchCriteria({ 
+      digits: Array(10).fill(''), 
+      budget: { min: '', max: '' }, 
+      sort: 'none',
+      carrier: 'all',
+      numerologySum: '',
+      excludeDigits: ''
+    });
+  };
+
+  const handleCompareToggle = (item, isChecked) => {
+    if (isChecked) {
+      if (compareItems.length >= 3) {
+        alert("You can compare up to 3 VIP numbers at a time.");
+        return;
+      }
+      setCompareItems(prev => [...prev, item]);
+    } else {
+      setCompareItems(prev => prev.filter(i => i._id !== item._id));
+    }
+  };
+
+  const handleRemoveFromCompare = (id) => {
+    setCompareItems(prev => prev.filter(i => i._id !== id));
+  };
+
+  const handleClearCompare = () => {
+    setCompareItems([]);
+  };
+
+  const scrollToSection = (sectionId) => {
+    let targetId = sectionId;
+    if (targetId === 'our-products') {
+      targetId = 'positional-search-section';
+    }
+
+    if (view !== 'home') { 
+      setView('home'); 
+      setTimeout(() => executeScroll(targetId), 100); 
+    } else { 
+      executeScroll(targetId); 
+    }
+  };
+
+  const executeScroll = (targetId, retries = 3) => {
+    const element = document.getElementById(targetId);
+    if (!element) {
+      if (retries > 0) {
+        setTimeout(() => executeScroll(targetId, retries - 1), 50);
+      }
+      return;
+    }
+    const headerOffset = 100; // Account for the height of the fixed header
+    const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const duration = 1000; 
+    let start = null;
+    const animation = (currentTime) => {
+      if (start === null) start = currentTime;
+      const timeElapsed = currentTime - start;
+      const run = ease(timeElapsed, startPosition, distance, duration);
+      window.scrollTo(0, run);
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      } else {
+        // Animation finished: focus on the first digit search input
+        if (targetId === 'positional-search-section') {
+          const firstInput = document.getElementById('digit-0');
+          if (firstInput) {
+            firstInput.focus();
+          }
+        }
+      }
+    };
+    const ease = (t, b, c, d) => {
+      t /= d / 2;
+      if (t < 1) return (c / 2) * t * t + b;
+      t--;
+      return (-c / 2) * (t * (t - 2) - 1) + b;
+    };
+    requestAnimationFrame(animation);
+  };
+
+  const getSingleDigitSum = (numberStr) => {
+    const raw = numberStr.replace(/\D/g, '');
+    if (!raw) return 0;
+    const sum = raw.split('').reduce((acc, d) => acc + parseInt(d), 0);
+    return sum === 0 ? 0 : (sum - 1) % 9 + 1;
+  };
+
+  const filteredNumbers = inventory.filter((item) => {
+    try {
+      if (item.isSold) return false;
+      if (activeCategory === 'Offer Zone') { if (!item.offerPrice) return false; }
+      else if (activeCategory !== 'All' && item.category !== activeCategory) { return false; }
+      
+      const rawNumber = (item.number || '').replace(/\D/g, '');
+      const { digits, budget, carrier, numerologySum, excludeDigits } = searchCriteria;
+      
+      // 1. Position-based digit matching
+      const digitMatch = digits.every((searchDigit, index) => {
+        if (searchDigit === '' || searchDigit === '*') return true; 
+        return rawNumber[index] === searchDigit;
+      });
+      if (!digitMatch) return false;
+
+      // 2. Budget price filtering
+      const currentPrice = item.offerPrice || item.price;
+      const min = budget.min !== '' ? parseInt(budget.min) : 0;
+      const max = budget.max !== '' ? parseInt(budget.max) : Infinity;
+      if (currentPrice < min || currentPrice > max) return false;
+
+      // 3. Network carrier filtering
+      if (carrier && carrier !== 'all') {
+        const itemCarrier = item.operator || 'Airtel';
+        if (itemCarrier.toLowerCase() !== carrier.toLowerCase()) return false;
+      }
+
+      // 4. Numerology single digit total filtering
+      if (numerologySum !== '' && numerologySum !== undefined) {
+        const itemSingleSum = getSingleDigitSum(item.number);
+        if (itemSingleSum !== parseInt(numerologySum)) return false;
+      }
+
+      // 5. Exclude digits filtering
+      if (excludeDigits && excludeDigits.trim() !== '') {
+        const excludedList = excludeDigits.replace(/[^0-9]/g, '').split('');
+        const hasExcluded = excludedList.some(d => rawNumber.includes(d));
+        if (hasExcluded) return false;
+      }
+
+      return true;
+    } catch (err) { return false; }
+  }).sort((a, b) => {
+    const { sort } = searchCriteria;
+    const priceA = a.offerPrice || a.price;
+    const priceB = b.offerPrice || b.price;
+    if (sort === 'low-high') return priceA - priceB;
+    if (sort === 'high-low') return priceB - priceA;
+    return 0;
+  });
+
+  const displayedNumbers = filteredNumbers.slice(0, visibleCount);
+
+  const addToCart = (item) => {
+    if (item.isSold) {
+      alert("This number has already been sold.");
+      return;
+    }
+    if (!cartItems.find(i => i._id === item._id)) {
+      setCartItems([...cartItems, item]);
+      logActivity("Added to Cart", `Number: ${item.number}`);
+    }
+  };
+
+  const handleBuyNow = (item) => { addToCart(item); if (!item.isSold) setIsCartOpen(true); logActivity("Clicked Buy Now", `Number: ${item.number}`); };
+  const removeFromCart = (id) => { setCartItems(cartItems.filter(item => item._id !== id)); };
+
+  const startCheckout = () => {
+    if (!user || !token) {
+      setIsCartOpen(false);
+      setIsLoginOpen(true);
+      alert("Please login first.");
+      return;
+    }
+
+    const hasUnavailableItem = cartItems.some(item => {
+      const dbItem = inventory.find(i => i._id === item._id);
+      return !dbItem || dbItem.isSold;
+    });
+
+    if (hasUnavailableItem) {
+      alert("One or more numbers in your cart are no longer available or have been sold. Please remove them from your cart to check out.");
+      return;
+    }
+
+    setIsCartOpen(false);
+    setIsCheckoutOpen(true);
+  };
+
+  const handleFinalPayment = async (checkoutDetails) => {
+    const subtotal = cartItems.reduce((sum, item) => sum + (item.offerPrice || item.price), 0);
+    const discountPercentage = appliedCoupon ? appliedCoupon.discountPercentage : 0;
+    const discountAmount = Math.round((subtotal * discountPercentage) / 100);
+    const totalAmount = subtotal - discountAmount;
+
+    const newOrder = {
+      customer: { 
+        name: checkoutDetails.name, 
+        phone: checkoutDetails.phone,
+        email: checkoutDetails.email,
+        address: `${checkoutDetails.address}, ${checkoutDetails.city}, ${checkoutDetails.state} - ${checkoutDetails.pincode}`
+      },
+      items: cartItems.map(i => ({ number: i.number, price: i.offerPrice || i.price, category: i.category })),
+      total: totalAmount
+    };
+
+    try {
+      const saveRes = await fetch(`${API_BASE_URL}/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify(newOrder)
+      });
+
+      if (saveRes.ok) {
+        const savedOrder = await saveRes.json();
+        setOrders([savedOrder, ...orders]);
+        setCartItems([]);
+        setAppliedCoupon(null);
+        setIsCheckoutOpen(false);
+        // Refresh inventory to reflect sold numbers immediately
+        const numsRes = await fetch(`${API_BASE_URL}/numbers`);
+        if (numsRes.ok) setInventory(await numsRes.json());
+        logActivity("Order Placed (Offline Booking)", `By: ${checkoutDetails.name}`);
+        alert("Booking Placed Successfully! Our team will contact you in 24-48 hours.\n\n⚠️ IMPORTANT: We only deal from our two official numbers: +91 98555-98544 and +91 76900-00070. Do not transfer payment to anyone without getting confirmation from these numbers!");
+      } else {
+        const errData = await saveRes.json();
+        alert(`Failed to place booking: ${errData.message || 'Check your submission details'}`);
+      }
+    } catch (err) {
+      alert("Error connecting to server. Please try again.");
+    }
+  };
+
+  const handleAddQuery = async (query) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/queries`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(query)
+      });
+      if (res.ok) {
+        const savedQuery = await res.json();
+        setQueries([savedQuery, ...queries]);
+        logActivity("New Query Sent", `From: ${query.email}`);
+      }
+    } catch (err) {}
+  };
+
+  const handleRequestSubmit = async (request) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/requests`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request)
+      });
+      if (res.ok) {
+        const savedReq = await res.json();
+        setRequests([savedReq, ...requests]);
+        logActivity("Special Number Requested", `Pattern: ${request.pattern}`);
+      }
+    } catch (err) {}
+  };
+
+  const handleSellRequestSubmit = async (sellRequest) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/sell-requests`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sellRequest)
+      });
+      if (res.ok) {
+        const savedSellReq = await res.json();
+        setSellRequests([savedSellReq, ...sellRequests]);
+        logActivity("VIP Number Listed for Sale", `Number: ${sellRequest.numberToSell} for ₹${sellRequest.price}`);
+      }
+    } catch (err) {}
+  };
+
+  const handleDeleteSellRequest = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this sell request?")) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/sell-requests/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-auth-token': token }
+      });
+      if (res.ok) {
+        setSellRequests(sellRequests.filter(sr => sr._id !== id));
+        return true;
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleApplyCoupon = async (code) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/coupons/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAppliedCoupon(data);
+        logActivity("Coupon Applied", `Code: ${code} (${data.discountPercentage}% discount)`);
+        return true;
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleRemoveCoupon = () => {
+    if (appliedCoupon) {
+      logActivity("Coupon Removed", `Code: ${appliedCoupon.code}`);
+      setAppliedCoupon(null);
+    }
+  };
+
+  const handleAddCoupon = async (newCoupon) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/coupons`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify(newCoupon)
+      });
+      if (res.ok) {
+        const savedCoupon = await res.json();
+        setCoupons([savedCoupon, ...coupons]);
+        return true;
+      } else {
+        const errorData = await res.json();
+        alert(`Failed to add coupon: ${errorData.message || 'Check your data'}`);
+      }
+    } catch (err) { alert("Error connecting to server."); }
+    return false;
+  };
+
+  const handleDeleteCoupon = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this coupon?")) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/coupons/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-auth-token': token }
+      });
+      if (res.ok) {
+        setCoupons(coupons.filter(c => c._id !== id));
+        return true;
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleAddNumber = async (newNum) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/numbers`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify(newNum)
+      });
+      if (res.ok) {
+        const savedNum = await res.json();
+        setInventory([savedNum, ...inventory]);
+        return true;
+      } else {
+        const errorData = await res.json();
+        alert(`Failed to add number: ${errorData.message || 'Check your data'}`);
+      }
+    } catch (err) { alert("Error connecting to server."); }
+    return false;
+  };
+
+  const handleBulkUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await fetch(`${API_BASE_URL}/numbers/bulk`, {
+        method: 'POST',
+        headers: { 'x-auth-token': token },
+        body: formData
+      });
+      const data = await res.json();
+      if (res.ok) {
+        let msg = `Bulk Upload Results:\n- Successfully Inserted: ${data.inserted} numbers\n- Skipped DB Duplicates: ${data.skippedDuplicates} numbers`;
+        if (data.validationErrors && data.validationErrors.length > 0) {
+          msg += `\n\nSkipped due to validation errors (${data.validationErrors.length} rows):\n` + data.validationErrors.slice(0, 5).join('\n');
+          if (data.validationErrors.length > 5) {
+            msg += `\n...and ${data.validationErrors.length - 5} more rows.`;
+          }
+        }
+        alert(msg);
+        fetchData();
+        return true;
+      } else {
+        alert(data.message || "Upload failed. Please check file format.");
+      }
+    } catch (err) { alert("Upload error connecting to server."); }
+    return false;
+  };
+
+  const handleDeleteNumber = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/numbers/${id}`, { method: 'DELETE', headers: { 'x-auth-token': token } });
+      if (res.ok) { setInventory(inventory.filter(item => item._id !== id)); return true; }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleAstroBooking = async (bookingDetails) => {
+    const newBooking = {
+      ...bookingDetails,
+      paymentStatus: 'Pending Direct Pay',
+      paymentId: `direct_pay_offline_${Date.now()}`,
+      status: 'Scheduled',
+      pricePaid: 499
+    };
+
+    try {
+      const saveRes = await fetch(`${API_BASE_URL}/consultations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify(newBooking)
+      });
+
+      if (saveRes.ok) {
+        const savedBooking = await saveRes.json();
+        setConsultations([savedBooking, ...consultations]);
+        setIsBookingOpen(false);
+        logActivity("Astro Booking Placed (Offline Direct Pay)", `For: ${bookingDetails.customerName}`);
+        alert(`Booking Successful! Your slot is reserved for ${bookingDetails.bookingDate} at ${bookingDetails.bookingSlot}. Please note that we do not collect payments directly on the website. You will pay the consulting fee (₹499) directly to our team.\n\n⚠️ IMPORTANT: We only deal from our two official numbers: +91 98555-98544 and +91 76900-00070. Do not transfer payment to anyone without getting confirmation from these numbers!`);
+      } else {
+        const errData = await saveRes.json();
+        alert(`Failed to save booking: ${errData.message || 'Check your details'}`);
+      }
+    } catch (err) {
+      alert("Error booking session: " + err.message);
+    }
+  };
+
+  const handleUpdateConsultation = async (id, updateData) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/consultations/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify(updateData)
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setConsultations(consultations.map(c => c._id === id ? updated : c));
+        return true;
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleDeleteConsultation = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this booking?")) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/consultations/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-auth-token': token }
+      });
+      if (res.ok) {
+        setConsultations(consultations.filter(c => c._id !== id));
+        return true;
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleAddCategory = async (catName) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify({ name: catName })
+      });
+      if (res.ok) { const savedCat = await res.json(); setCategories([...categories, savedCat]); return true; }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleDeleteCategory = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/categories/${id}`, { method: 'DELETE', headers: { 'x-auth-token': token } });
+      if (res.ok) { setCategories(categories.filter(cat => cat._id !== id)); return true; }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleUpdateOrderStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/orders/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) { 
+        const updatedOrder = await res.json(); 
+        setOrders(orders.map(o => o._id === id ? updatedOrder : o)); 
+        // Refresh local inventory so status changes show instantly
+        const numsRes = await fetch(`${API_BASE_URL}/numbers`);
+        if (numsRes.ok) setInventory(await numsRes.json());
+        return true; 
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleDeliverOrder = async (id, updatedItems) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/orders/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify({ status: 'Delivered', items: updatedItems })
+      });
+      if (res.ok) { 
+        const updatedOrder = await res.json(); 
+        setOrders(orders.map(o => o._id === id ? updatedOrder : o)); 
+        // Refresh local inventory so status changes show instantly
+        const numsRes = await fetch(`${API_BASE_URL}/numbers`);
+        if (numsRes.ok) setInventory(await numsRes.json());
+        return true; 
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleDeleteOrder = async (id) => {
+    if (!window.confirm("Are you sure?")) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/orders/${id}`, { method: 'DELETE', headers: { 'x-auth-token': token } });
+      if (res.ok) { setOrders(orders.filter(o => o._id !== id)); return true; }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleUpdateRequestStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/requests/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setRequests(requests.map(r => r._id === id ? updated : r));
+        return true;
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleDeleteRequest = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this request?")) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/requests/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-auth-token': token }
+      });
+      if (res.ok) {
+        setRequests(requests.filter(r => r._id !== id));
+        return true;
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleUpdateQueryStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/queries/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setQueries(queries.map(q => q._id === id ? updated : q));
+        return true;
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleDeleteQuery = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this query?")) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/queries/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-auth-token': token }
+      });
+      if (res.ok) {
+        setQueries(queries.filter(q => q._id !== id));
+        return true;
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleUpdateOfferPrice = async (id, offerPrice) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/numbers/${id}/offer`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify({ offerPrice })
+      });
+      if (res.ok) { const updatedNum = await res.json(); setInventory(inventory.map(n => n._id === id ? updatedNum : n)); return true; }
+    } catch (err) {}
+    return false;
+  };
+
+  const handleToggleSoldStatus = async (id, isSold) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/numbers/${id}/toggle-sold`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+        body: JSON.stringify({ isSold })
+      });
+      if (res.ok) {
+        const updatedNum = await res.json();
+        setInventory(inventory.map(n => n._id === id ? updatedNum : n));
+        return true;
+      }
+    } catch (err) {}
+    return false;
+  };
+
+  const isAdmin = user && user.role === 'admin';
+
+  if (isLoading) return <div className="loading-screen"><div className="loader"></div><p>Loading...</p></div>;
+  if (error) return <div className="loading-screen"><h2>⚠️ {error}</h2><button onClick={fetchData}>Retry</button></div>;
+
+  return (
+    <div className="app-container">
+      <Header onLoginClick={() => setIsLoginOpen(true)} onCartClick={() => setIsCartOpen(true)} cartCount={cartItems.length} user={user} onLogout={handleLogout} onNavigate={scrollToSection} isAdmin={isAdmin} onDashboardClick={() => setView('dashboard')} onMyOrdersClick={() => setIsMyOrdersOpen(true)} />
+      <main>
+        {view === 'home' ? (
+          <>
+            <div id="home"><Hero /></div>
+            <div id="our-products" style={{ paddingTop: '40px' }}>
+              <FeaturedOffers 
+                inventory={inventory} 
+                onAddToCart={addToCart} 
+                onBuyNow={handleBuyNow} 
+                cartItems={cartItems} 
+                onCompareToggle={handleCompareToggle}
+                compareItems={compareItems}
+              />
+              <AstroNumerologySection 
+                onBookClick={() => setIsBookingOpen(true)} 
+                onLoginClick={() => setIsLoginOpen(true)} 
+                user={user} 
+                onSelectLuckyDigit={(digit) => {
+                  setSearchCriteria(prev => ({
+                    ...prev,
+                    numerologySum: String(digit)
+                  }));
+                  scrollToSection('our-products');
+                }}
+              />
+              <PositionalSearch searchCriteria={searchCriteria} onSearch={setSearchCriteria} />
+              <CategoryTabs activeCategory={activeCategory} onCategoryChange={setActiveCategory} categories={categories} />
+              {(activeCategory !== 'All' || 
+                searchCriteria.digits.some(d => d !== '') || 
+                searchCriteria.budget.min !== '' || 
+                searchCriteria.budget.max !== '' ||
+                searchCriteria.carrier !== 'all' ||
+                searchCriteria.numerologySum !== '' ||
+                searchCriteria.excludeDigits !== '') && (
+                <div style={{ textAlign: 'center', marginBottom: '20px' }}><button onClick={resetAllFilters} className="clear-search-btn">Reset All Filters</button></div>
+              )}
+              <NumberList 
+                numbers={displayedNumbers} 
+                onAddToCart={addToCart} 
+                onBuyNow={handleBuyNow} 
+                cartItems={cartItems} 
+                onCompareToggle={handleCompareToggle}
+                compareItems={compareItems}
+              />
+              {filteredNumbers.length > visibleCount && (
+                <div style={{ textAlign: 'center', marginTop: '40px' }}><button onClick={() => setVisibleCount(prev => prev + 18)} className="dashboard-btn">Load More Numbers</button></div>
+              )}
+              <div id="request-number"><RequestForm onSubmit={handleRequestSubmit} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
+              <div id="sell-number"><SellNumberForm onSubmit={handleSellRequestSubmit} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
+            </div>
+            <div id="how-it-works"><HowItWorks /></div>
+            <div id="about-us"><AboutUs /></div>
+            <div id="why-choose-us"><WhyChooseUs /></div>
+            <div id="partner-program">
+              <PartnerProgram onSubmitQuery={handleAddQuery} user={user} onLoginClick={() => setIsLoginOpen(true)} />
+            </div>
+            <div id="contact-us"><ContactUs /></div>
+            <div id="faq-section"><FAQ onSubmitQuery={handleAddQuery} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
+            <div id="privacy-policy" style={{ paddingTop: '20px', display: 'flex', justifyContent: 'center' }}><PrivacyPolicy /></div>
+            <div id="terms-conditions" style={{ paddingTop: '20px', display: 'flex', justifyContent: 'center' }}><TermsConditions /></div>
+          </>
+        ) : view === 'dashboard' ? (
+          <Dashboard 
+            inventory={inventory} 
+            categories={categories} 
+            requests={requests} 
+            sellRequests={sellRequests} 
+            onDeleteSellRequest={handleDeleteSellRequest} 
+            onUpdateRequestStatus={handleUpdateRequestStatus}
+            onDeleteRequest={handleDeleteRequest}
+            coupons={coupons} 
+            onAddCoupon={handleAddCoupon} 
+            onDeleteCoupon={handleDeleteCoupon} 
+            activities={activities} 
+            onAddNumber={handleAddNumber} 
+            onDeleteNumber={handleDeleteNumber} 
+            onAddCategory={handleAddCategory} 
+            onDeleteCategory={handleDeleteCategory} 
+            onUpdateOrderStatus={handleUpdateOrderStatus} 
+            onDeleteOrder={handleDeleteOrder} 
+            onUpdateOfferPrice={handleUpdateOfferPrice} 
+            onBulkUpload={handleBulkUpload} 
+            queries={queries} 
+            onUpdateQueryStatus={handleUpdateQueryStatus}
+            onDeleteQuery={handleDeleteQuery}
+            orders={orders} 
+            consultations={consultations}
+            onUpdateConsultation={handleUpdateConsultation}
+            onDeleteConsultation={handleDeleteConsultation}
+            onToggleSoldStatus={handleToggleSoldStatus}
+            onDeliverOrder={handleDeliverOrder}
+            onClose={() => setView('home')} 
+          />
+        ) : null}
+      </main>
+      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} onLogin={handleLogin} onSendOtp={handleSendOtp} />
+      <MyOrdersModal isOpen={isMyOrdersOpen} onClose={() => setIsMyOrdersOpen(false)} orders={orders} />
+      <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} onBook={handleAstroBooking} user={user} />
+      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} cartItems={cartItems} onRemove={removeFromCart} onCheckout={startCheckout} appliedCoupon={appliedCoupon} onApplyCoupon={handleApplyCoupon} onRemoveCoupon={handleRemoveCoupon} />
+      {isCheckoutOpen && (
+        <CheckoutForm 
+          user={user} 
+          totalAmount={cartItems.reduce((sum, i) => sum + (i.offerPrice || i.price), 0) - Math.round((cartItems.reduce((sum, i) => sum + (i.offerPrice || i.price), 0) * (appliedCoupon ? appliedCoupon.discountPercentage : 0)) / 100)} 
+          onSubmit={handleFinalPayment} 
+          onCancel={() => setIsCheckoutOpen(false)} 
+        />
+      )}
+      <FloatingWhatsApp />
+      <CompareDrawer 
+        compareItems={compareItems} 
+        onRemoveFromCompare={handleRemoveFromCompare} 
+        onClearCompare={handleClearCompare} 
+        onAddToCart={addToCart} 
+        onBuyNow={handleBuyNow} 
+        cartItems={cartItems} 
+      />
+      <footer>
+        <div className="footer-container">
+          <div className="footer-col footer-brand">
+            <div className="footer-logo-container" onClick={() => scrollToSection('home')}>
+              <img src="/logo.jpg" alt="VNG Logo" className="footer-logo-img" />
+              <div className="footer-logo-text">
+                VipNumber<span className="gold-text">Garage</span>
+              </div>
+            </div>
+            <p className="footer-brand-desc">
+              Your premier showroom for exclusive and prestigious VIP mobile numbers. Elevate your personal and business presence with our curated collection of elite digits.
+            </p>
+            <div className="footer-warning-box" style={{ 
+              backgroundColor: 'rgba(234, 45, 45, 0.05)', 
+              borderLeft: '3px solid #ff5252', 
+              padding: '10px 14px', 
+              borderRadius: '4px', 
+              marginTop: '15px', 
+              fontSize: '0.8rem', 
+              lineHeight: '1.4',
+              color: '#ccc'
+            }}>
+              <strong style={{ color: '#ff5252', display: 'block', marginBottom: '2px' }}>⚠️ SECURITY WARNING:</strong>
+              We only deal from our two official numbers: <strong style={{ color: 'white' }}>+91 98555-98544</strong> and <strong style={{ color: 'white' }}>+91 76900-00070</strong>. Please do not transfer payments to anyone without confirmation from these numbers.
+            </div>
+          </div>
+          
+          <div className="footer-col">
+            <h3>Quick Links</h3>
+            <ul>
+              <li onClick={() => scrollToSection('home')}>Home</li>
+              <li onClick={() => scrollToSection('our-products')}>Find Your Number</li>
+              <li onClick={() => scrollToSection('sell-number')}>Sell Number</li>
+              <li onClick={() => scrollToSection('partner-program')}>Partner Program</li>
+              <li onClick={() => scrollToSection('contact-us')}>Contact Us</li>
+            </ul>
+          </div>
+          
+          <div className="footer-col">
+            <h3>Support & Legal</h3>
+            <ul>
+              <li onClick={() => scrollToSection('about-us')}>Our Story</li>
+              <li onClick={() => scrollToSection('why-choose-us')}>Why Choose Us</li>
+              <li onClick={() => scrollToSection('faq-section')}>FAQs</li>
+              <li onClick={() => scrollToSection('numerology-consultation')}>Numerology</li>
+              <li onClick={() => scrollToSection('privacy-policy')}>Privacy Policy</li>
+              <li onClick={() => scrollToSection('terms-conditions')}>Terms & Conditions</li>
+            </ul>
+          </div>
+          
+          <div className="footer-col">
+            <h3>Contact Support</h3>
+            <div className="footer-contact-info">
+              <div className="footer-contact-item">
+                📞 <strong>Phone:</strong> <a href="tel:+919855598544" style={{ color: 'inherit', textDecoration: 'none' }}>+91 98555-98544</a>, <a href="tel:+917690000070" style={{ color: 'inherit', textDecoration: 'none' }}>+91 76900-00070</a>
+              </div>
+              <div className="footer-contact-item">
+                ✉️ <strong>Email:</strong> support@vipnumbergarage.com
+              </div>
+              <div className="footer-contact-item">
+                📍 <strong>Address:</strong> Hathi Mandir Street, Bathinda, Punjab
+              </div>
+              <div className="footer-contact-item" style={{ marginTop: '10px', fontSize: '0.8rem', color: '#666' }}>
+                🕒 <strong>Hours:</strong> Mon - Sat: 10:00 AM - 6:00 PM
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="footer-bottom">
+          <p>&copy; 2026 VipNumberGarage. Powered by VNG Telecommunications. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default App;

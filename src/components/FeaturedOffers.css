@@ -1,0 +1,97 @@
+.featured-offers-section {
+  margin-bottom: 30px;
+  padding: 15px;
+  background: rgba(212, 175, 55, 0.02);
+  border-radius: 15px;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.offer-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.fire-icon {
+  font-size: 1.5rem;
+  animation: flicker 1s infinite alternate;
+}
+
+.offer-header h2 {
+  font-size: 1.4rem;
+  margin: 0;
+  color: var(--primary-gold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.offer-tag {
+  background-color: #ff4d4d;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.offers-grid {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding: 10px 5px 20px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-gold) transparent;
+}
+
+.offers-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.offers-grid::-webkit-scrollbar-thumb {
+  background-color: var(--primary-gold);
+  border-radius: 10px;
+}
+
+/* Fix for Hot Deals cards being too small or overflowing */
+.offers-grid > div {
+  flex: 0 0 280px; /* Use a fixed width for the carousel cards to ensure content fits */
+}
+
+/* Ensure digits fit and buttons are systematic in these smaller cards */
+.offers-grid .display-number {
+  font-size: 1.45rem !important;
+  letter-spacing: 0.5px !important;
+}
+
+.offers-grid .number-card {
+  height: auto;
+  min-height: 350px;
+  padding: 15px;
+}
+
+.offer-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.2), transparent);
+  margin-top: 25px;
+}
+
+@media (max-width: 768px) {
+  .offer-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .offer-header h2 {
+    font-size: 1.4rem;
+  }
+  .offers-grid > div {
+    flex: 0 0 260px;
+  }
+  .offers-grid .number-card {
+    height: auto;
+    min-height: 330px;
+    padding: 12px;
+  }
+}

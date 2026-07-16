@@ -1,0 +1,56 @@
+.how-it-works {
+  padding: 80px 0;
+}
+
+.steps-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .how-it-works {
+    padding: 40px 0;
+  }
+  .steps-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+.step-card {
+  position: relative;
+  text-align: left;
+}
+
+.step-number {
+  font-family: 'Cinzel', serif;
+  font-size: 4rem;
+  font-weight: 900;
+  color: rgba(214, 175, 55, 0.15);
+  position: absolute;
+  top: -30px;
+  left: -15px;
+  z-index: 0;
+}
+
+.step-card h3 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.step-card p {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 300;
+  color: var(--text-gray);
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}

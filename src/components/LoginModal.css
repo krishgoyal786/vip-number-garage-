@@ -1,0 +1,128 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background-color: var(--card-bg);
+  padding: 40px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  border: 1px solid #333;
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: var(--text-gray);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.modal-content h2 {
+  margin-bottom: 10px;
+}
+
+.modal-content p {
+  color: var(--text-gray);
+  margin-bottom: 30px;
+  font-size: 0.9rem;
+}
+
+.name-input {
+  width: 100%;
+  padding: 12px;
+  background-color: #222;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+.name-input:focus {
+  outline: none;
+  border-color: var(--primary-gold);
+}
+
+.input-group {
+  display: flex;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.prefix {
+  background-color: #222;
+  padding: 12px;
+  color: var(--text-gray);
+  border-right: 1px solid #333;
+}
+
+.input-group input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 12px;
+  color: white;
+  font-size: 1rem;
+}
+
+.input-group input:focus {
+  outline: none;
+}
+
+.otp-input {
+  width: 100%;
+  padding: 12px;
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+  font-size: 1.2rem;
+  text-align: center;
+  letter-spacing: 5px;
+  margin-bottom: 20px;
+}
+
+.action-btn {
+  width: 100%;
+  background-color: var(--primary-gold);
+  color: black;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.action-btn:hover {
+  transform: scale(1.02);
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: var(--primary-gold);
+  margin-top: 15px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}

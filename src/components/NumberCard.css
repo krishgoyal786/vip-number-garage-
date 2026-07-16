@@ -1,0 +1,433 @@
+.number-card {
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.7) 0%, rgba(15, 15, 15, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  animation: reveal 0.6s ease-out backwards;
+  height: auto;
+  min-height: 350px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Light glare effect overlay that shines across the card */
+.number-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 45%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(212, 175, 55, 0.05) 55%,
+    transparent 60%
+  );
+  transform: rotate(-45deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+
+.number-card:hover::after {
+  transform: rotate(-45deg) translate(30%, 30%);
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.number-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(212, 175, 55, 0.35);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.12);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.card-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.share-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-gray);
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  width: 34px;
+  height: 34px;
+}
+
+.share-icon-svg {
+  width: 16px;
+  height: 16px;
+}
+
+.share-btn:hover {
+  background-color: rgba(212, 175, 55, 0.15);
+  border-color: var(--primary-gold);
+  color: var(--primary-gold);
+  transform: rotate(-15deg);
+}
+
+.numerology-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+.category-badge {
+  background: rgba(212, 175, 55, 0.08);
+  color: var(--primary-gold);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 1px;
+}
+
+.numerology-badge {
+  font-size: 0.6rem;
+  color: #b0b0b0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 3px 10px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.numerology-badge.single {
+  border-color: rgba(212, 175, 55, 0.3);
+  background-color: rgba(212, 175, 55, 0.04);
+}
+
+.numerology-badge strong {
+  color: var(--primary-gold);
+}
+
+.badge-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.carrier-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.carrier-badge.airtel {
+  background-color: rgba(234, 29, 36, 0.08);
+  color: #ff5252;
+  border: 1px solid rgba(234, 29, 36, 0.2);
+}
+
+.carrier-badge.jio {
+  background-color: rgba(0, 98, 172, 0.08);
+  color: #4da6ff;
+  border: 1px solid rgba(0, 98, 172, 0.2);
+}
+
+.carrier-badge.vi {
+  background-color: rgba(224, 0, 0, 0.08);
+  color: #ff4d4d;
+  border: 1px solid rgba(224, 0, 0, 0.2);
+}
+
+.carrier-badge.bsnl {
+  background-color: rgba(243, 112, 33, 0.08);
+  color: #ff9d5c;
+  border: 1px solid rgba(243, 112, 33, 0.2);
+}
+
+.display-number {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.55rem;
+  margin: 8px 0;
+  letter-spacing: 1px;
+  font-weight: 800;
+  color: #ffffff;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+}
+
+.fancy-highlight {
+  background: linear-gradient(135deg, #f9f295 0%, #e0aa3e 40%, #b88a44 80%, #f9f295 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-weight: 900;
+  text-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+}
+
+.number-card:hover .display-number {
+  transform: scale(1.02);
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+}
+
+.description {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  color: #a5a5a5;
+  margin-bottom: 12px;
+  line-height: 1.5;
+  font-weight: 300;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.card-footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.price-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #666;
+  font-size: 0.85rem;
+  margin-bottom: 2px;
+}
+
+.price {
+  font-family: 'Cinzel', serif;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--primary-gold);
+  background: linear-gradient(135deg, #f9f295 0%, #e0aa3e 50%, #b88a44 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.cart-btn {
+  background-color: transparent;
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 4px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cart-btn:hover {
+  border-color: var(--primary-gold);
+  color: var(--primary-gold);
+  background-color: rgba(212, 175, 55, 0.05);
+}
+
+.cart-btn.in-cart {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #777;
+  cursor: default;
+}
+
+.buy-btn {
+  background: linear-gradient(135deg, var(--primary-gold), #b89324);
+  color: #000;
+  padding: 8px 4px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Poppins', sans-serif;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+}
+
+.buy-btn:hover {
+  background: var(--accent-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.45);
+}
+
+.whatsapp-btn {
+  background-color: #25d366;
+  color: white;
+  padding: 8px 4px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+  font-family: 'Poppins', sans-serif;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+}
+
+.whatsapp-btn:hover {
+  background-color: #20ba5a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
+}
+
+.card-top-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.compare-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  color: var(--text-gray);
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.compare-checkbox-label:hover {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: rgba(212, 175, 55, 0.3);
+  color: var(--primary-gold);
+}
+
+.compare-checkbox-label.checked {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--primary-gold);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.15);
+}
+
+.compare-checkbox-label input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.compare-checkbox-custom {
+  position: relative;
+  height: 14px;
+  width: 14px;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  transition: all 0.3s;
+}
+
+.compare-checkbox-label:hover .compare-checkbox-custom {
+  border-color: var(--primary-gold);
+}
+
+.compare-checkbox-label.checked .compare-checkbox-custom {
+  background-color: var(--primary-gold);
+  border-color: var(--primary-gold);
+}
+
+.compare-checkbox-custom:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid #000000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.compare-checkbox-label.checked .compare-checkbox-custom:after {
+  display: block;
+}
+
+.compare-text {
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 576px) {
+  .number-card {
+    padding: 12px;
+    height: auto;
+    min-height: 330px;
+  }
+  .display-number {
+    font-size: 1.55rem;
+    margin: 8px 0;
+  }
+  .card-header {
+    margin-bottom: 12px;
+  }
+  .description {
+    margin-bottom: 12px;
+  }
+  .price {
+    font-size: 1.25rem;
+  }
+}
+

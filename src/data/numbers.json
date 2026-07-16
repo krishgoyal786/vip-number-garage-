@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "number": "99999-00007",
+    "price": 150000,
+    "category": "Royalty",
+    "pattern": "James Bond Style",
+    "description": "The classic 00007 ending combined with a powerful five-9s prefix."
+  },
+  {
+    "id": 2,
+    "number": "88888-88888",
+    "price": 500000,
+    "category": "Platinum",
+    "pattern": "All Same Digits",
+    "description": "The ultimate status symbol. Every single digit is identical."
+  },
+  {
+    "id": 3,
+    "number": "98765-43210",
+    "price": 75000,
+    "category": "Sequence",
+    "pattern": "Countdown",
+    "description": "Perfectly memorable descending sequence for high-impact presence."
+  },
+  {
+    "id": 4,
+    "number": "77777-00786",
+    "price": 120000,
+    "category": "Lucky",
+    "pattern": "786 Ending",
+    "description": "Combines the power of seven 7s with the auspicious 786 ending."
+  },
+  {
+    "id": 5,
+    "number": "90000-00009",
+    "price": 200000,
+    "category": "Mirror",
+    "pattern": "Palindrome",
+    "description": "A rare symmetrical number that looks the same forwards and backwards."
+  },
+  {
+    "id": 6,
+    "number": "99999-55555",
+    "price": 250000,
+    "category": "Platinum",
+    "pattern": "Five & Five",
+    "description": "A perfectly balanced split of two identical five-digit sequences."
+  },
+  {
+    "id": 7,
+    "number": "73737-37373",
+    "price": 180000,
+    "category": "Pattern",
+    "pattern": "Repeat Pair",
+    "description": "A rhythmic repeat of 73 that is impossible to forget."
+  },
+  {
+    "id": 8,
+    "number": "95959-59595",
+    "price": 160000,
+    "category": "Pattern",
+    "pattern": "Alternating",
+    "description": "Sleek alternating pattern of 9 and 5 for a unique visual appeal."
+  },
+  {
+    "id": 9,
+    "number": "12345-12345",
+    "price": 220000,
+    "category": "Sequence",
+    "pattern": "Double Sequence",
+    "description": "An incredibly rare and catchy double 1-to-5 sequence."
+  },
+  {
+    "id": 10,
+    "number": "99999-00000",
+    "price": 300000,
+    "category": "Platinum",
+    "pattern": "Zero Gravity",
+    "description": "The powerful contrast of five 9s followed by five absolute zeros."
+  },
+  {
+    "id": 11,
+    "number": "00000-11111",
+    "price": 190000,
+    "category": "Pattern",
+    "pattern": "Bottom to Top",
+    "description": "A clean transition from five zeros to five ones."
+  },
+  {
+    "id": 12,
+    "number": "78600-00786",
+    "price": 210000,
+    "category": "Lucky",
+    "pattern": "Double 786",
+    "description": "Auspicious 786 at both the start and the end. Highly sought after."
+  },
+  {
+    "id": 13,
+    "number": "91191-19119",
+    "price": 140000,
+    "category": "Mirror",
+    "pattern": "Symmetric",
+    "description": "A complex 9-1-1 symmetry that stands out in any contact list."
+  },
+  {
+    "id": 14,
+    "number": "11111-22222",
+    "price": 240000,
+    "category": "Platinum",
+    "pattern": "Twin Towers",
+    "description": "Perfectly matched sets of five 1s and five 2s."
+  },
+  {
+    "id": 15,
+    "number": "00001-00001",
+    "price": 175000,
+    "category": "Mirror",
+    "pattern": "Mirror One",
+    "description": "A clean, numeric palindrome featuring the power of number one."
+  }
+]

@@ -1,0 +1,145 @@
+import React, { useState } from 'react';
+import './CheckoutForm.css';
+
+const CheckoutForm = ({ user, totalAmount, onSubmit, onCancel }) => {
+  const [agreed, setAgreed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [details, setDetails] = useState({
+    name: user?.name || '',
+    phone: user?.phone || '',
+    email: '',
+    address: '',
+    city: '',
+    state: '',
+    pincode: ''
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!agreed) {
+      alert("Please accept the Privacy Policy and Terms & Conditions to complete your purchase.");
+      return;
+    }
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      await onSubmit(details);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="checkout-overlay">
+      <div className="checkout-modal">
+        <div className="checkout-header">
+          <h2>Delivery & Billing Details</h2>
+          <button className="close-btn" onClick={onCancel}>&times;</button>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="checkout-form">
+          <div className="form-section">
+            <h3>Personal Information</h3>
+            <div className="form-grid">
+              <input 
+                type="text" placeholder="Full Name" 
+                value={details.name} onChange={(e) => setDetails({...details, name: e.target.value})} 
+                required 
+              />
+              <input 
+                type="email" placeholder="Email Address" 
+                value={details.email} onChange={(e) => setDetails({...details, email: e.target.value})} 
+                required 
+              />
+              <input 
+                type="tel" placeholder="Mobile Number" 
+                value={details.phone} onChange={(e) => setDetails({...details, phone: e.target.value})} 
+                required 
+              />
+            </div>
+          </div>
+
+          <div className="form-section">
+            <h3>Shipping Address</h3>
+            <textarea 
+              placeholder="Full Address (House No, Street, Area)" 
+              value={details.address} onChange={(e) => setDetails({...details, address: e.target.value})} 
+              required
+            ></textarea>
+            <div className="form-grid">
+              <input 
+                type="text" placeholder="City" 
+                value={details.city} onChange={(e) => setDetails({...details, city: e.target.value})} 
+                required 
+              />
+              <input 
+                type="text" placeholder="State" 
+                value={details.state} onChange={(e) => setDetails({...details, state: e.target.value})} 
+                required 
+              />
+              <input 
+                type="text" placeholder="Pincode" 
+                value={details.pincode} onChange={(e) => setDetails({...details, pincode: e.target.value})} 
+                required 
+              />
+            </div>
+          </div>
+
+          <div className="security-disclaimer-box" style={{ 
+            backgroundColor: 'rgba(234, 45, 45, 0.08)', 
+            border: '1px solid rgba(234, 45, 45, 0.3)', 
+            padding: '14px 18px', 
+            borderRadius: '8px', 
+            marginTop: '15px', 
+            marginBottom: '15px', 
+            fontSize: '0.82rem', 
+            lineHeight: '1.5',
+            color: '#ffcdd2'
+          }}>
+            <strong style={{ color: '#ff5252', display: 'block', marginBottom: '4px', fontSize: '0.9rem' }}>
+              ⚠️ IMPORTANT SECURITY WARNING:
+            </strong>
+            We only deal from our two official numbers: <strong style={{ color: 'white' }}>+91 98555-98544</strong> and <strong style={{ color: 'white' }}>+91 76900-00070</strong>. 
+            Do not transfer any payments to anyone without getting direct verification and confirmation from these two official numbers.
+          </div>
+
+          <div className="checkout-agreement-container">
+            <input 
+              type="checkbox" 
+              id="checkout-terms-checkbox" 
+              checked={agreed} 
+              onChange={(e) => setAgreed(e.target.checked)} 
+              className="checkout-checkbox-input"
+              required 
+            />
+            <label htmlFor="checkout-terms-checkbox" className="checkout-checkbox-label">
+              I agree to the{" "}
+              <span className="gold-text-link" onClick={() => { onCancel(); setTimeout(() => { document.getElementById('privacy-policy')?.scrollIntoView({ behavior: 'smooth' }); }, 150); }}>
+                Privacy Policy
+              </span>{" "}
+              and{" "}
+              <span className="gold-text-link" onClick={() => { onCancel(); setTimeout(() => { document.getElementById('terms-conditions')?.scrollIntoView({ behavior: 'smooth' }); }, 150); }}>
+                Terms & Conditions
+              </span>
+              .
+            </label>
+          </div>
+
+          <div className="checkout-footer">
+            <div className="total-box">
+              <span>Total Price:</span>
+              <strong>₹{totalAmount.toLocaleString()}</strong>
+            </div>
+            <button type="submit" className="pay-now-btn" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting Request..." : `Confirm Booking & Request Callback`}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default CheckoutForm;

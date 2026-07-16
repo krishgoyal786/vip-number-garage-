@@ -1,0 +1,72 @@
+.category-tabs-container {
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.category-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scrollbar-width: none; /* Hide scrollbar for clean look */
+}
+
+.category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.category-tab {
+  background-color: rgba(26, 26, 26, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #a0a0a0;
+  padding: 10px 28px;
+  border-radius: 30px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+}
+
+.category-tab:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  color: var(--primary-gold);
+  background-color: rgba(212, 175, 55, 0.05);
+}
+
+.category-tab.active {
+  background: linear-gradient(135deg, var(--primary-gold), #b89324);
+  color: black;
+  border-color: var(--primary-gold);
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.offer-zone-tab.active {
+  background: linear-gradient(135deg, #ff4d4d, #b31a1a);
+  color: white;
+  border-color: #ff4d4d;
+  box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+}
+
+.offer-zone-tab:hover {
+  border-color: rgba(255, 77, 77, 0.4);
+  color: #ff4d4d;
+  background-color: rgba(255, 77, 77, 0.05);
+}
+
+@media (max-width: 768px) {
+  .category-tabs-container {
+    justify-content: flex-start;
+    padding: 0 16px;
+    margin-bottom: 25px;
+  }
+  .category-tab {
+    padding: 8px 20px;
+    font-size: 0.8rem;
+  }
+}
