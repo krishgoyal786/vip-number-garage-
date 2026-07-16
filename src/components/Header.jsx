@@ -6,7 +6,7 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
   const [animateCart, setAnimateCart] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
-  const lastTouchTime = useRef(0);
+  const hoverOpenedTime = useRef(0);
 
   // Close user dropdown when clicking outside or scrolling
   useEffect(() => {
@@ -120,14 +120,24 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
               <div 
                 className="user-menu-container"
                 ref={userMenuRef}
-                onPointerEnter={(e) => {
-                  if (e.pointerType === 'mouse') setShowUserMenu(true);
+                onMouseEnter={() => {
+                  setShowUserMenu(true);
+                  hoverOpenedTime.current = Date.now();
                 }}
-                onPointerLeave={(e) => {
-                  if (e.pointerType === 'mouse') setShowUserMenu(false);
+                onMouseLeave={() => {
+                  setShowUserMenu(false);
                 }}
               >
-                <div className="user-profile" onClick={() => setShowUserMenu(!showUserMenu)}>
+                <div 
+                  className="user-profile" 
+                  onClick={() => {
+                    if (Date.now() - hoverOpenedTime.current < 300) {
+                      setShowUserMenu(true);
+                    } else {
+                      setShowUserMenu(prev => !prev);
+                    }
+                  }}
+                >
                   👤 {user.name.split(' ')[0]}
                 </div>
                 {showUserMenu && (
