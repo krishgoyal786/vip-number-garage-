@@ -14,6 +14,7 @@ const PartnerProgram = ({ onSubmitQuery, user, showFormOnly = false, initialProg
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Sync pre-selected program type when changed in parent
   useEffect(() => {
@@ -192,7 +193,6 @@ const PartnerProgram = ({ onSubmitQuery, user, showFormOnly = false, initialProg
       </section>
     );
   }
-
   // Home Page View (without embedded form, but with action buttons)
   return (
     <section className="partner-container">
@@ -203,83 +203,99 @@ const PartnerProgram = ({ onSubmitQuery, user, showFormOnly = false, initialProg
           Grow with us! Join the <strong>VipNumberGarage Partner Network</strong>. Whether you are an influencer with a loyal audience or a business seeking mutually beneficial alliances, we have customized programs to reward your influence and integration.
         </p>
 
-        <div className="programs-grid">
-          {/* Influencer Program Card */}
-          <div className="program-card influencer-card">
-            <div className="card-badge">INFLUENCER</div>
-            <h3>Influencer Program</h3>
-            <p className="card-tagline">Monetize your reach by sharing premium numbers.</p>
-            <ul className="benefits-list">
-              <li>
-                <span className="bullet">✦</span> 
-                <span className="benefit-text"><strong>Custom Coupon Code</strong>: Get a unique coupon code (e.g., <code>VIPINFLUENCER10</code>) to share with your audience.</span>
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <span className="benefit-text"><strong>Audience Discount</strong>: Your followers receive an instant discount on any VIP number they purchase.</span>
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <span className="benefit-text"><strong>Influencer Rewards</strong>: Earn attractive cash payouts or platform credits for every transaction made with your code.</span>
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <span className="benefit-text"><strong>Dashboard Tracking</strong>: Real-time insights into your coupon usage and earnings.</span>
-              </li>
-            </ul>
-            <button className="apply-card-btn gold-apply-btn" onClick={() => onApplyClick('influencer')}>Apply Now →</button>
+        {!isExpanded ? (
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <button className="partner-toggle-btn animate-pulse-light" onClick={() => setIsExpanded(true)}>
+              View Program Details & Apply
+            </button>
           </div>
+        ) : (
+          <div className="animate-fade-in">
+            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+              <button className="partner-toggle-btn less" onClick={() => setIsExpanded(false)}>
+                Show Less Details
+              </button>
+            </div>
 
-          {/* Business Program Card */}
-          <div className="program-card business-card">
-            <div className="card-badge gold-badge">BUSINESS PARTNER</div>
-            <h3>Business with Us</h3>
-            <p className="card-tagline">Incorporate premium mobile numbers into your service portfolio.</p>
-            <ul className="benefits-list">
-              <li>
-                <span className="bullet">✦</span> 
-                <span className="benefit-text"><strong>Affiliate API & Tools</strong>: Offer VIP numbers to your existing client base under your own brand or as an affiliate.</span>
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <span className="benefit-text"><strong>Shared Coupon Incentives</strong>: Provide exclusive discounts to your corporate clients or network.</span>
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <span className="benefit-text"><strong>High Margin Returns</strong>: Secure special dealer pricing and high-percentage referral commissions.</span>
-              </li>
-              <li>
-                <span className="bullet">✦</span> 
-                <span className="benefit-text"><strong>Legal & Transfer Support</strong>: We handle all registration and transfer logistics, while you focus on sales.</span>
-              </li>
-            </ul>
-            <button className="apply-card-btn gold-apply-btn" onClick={() => onApplyClick('business')}>Apply Now →</button>
-          </div>
-        </div>
+            <div className="programs-grid">
+              {/* Influencer Program Card */}
+              <div className="program-card influencer-card">
+                <div className="card-badge">INFLUENCER</div>
+                <h3>Influencer Program</h3>
+                <p className="card-tagline">Monetize your reach by sharing premium numbers.</p>
+                <ul className="benefits-list">
+                  <li>
+                    <span className="bullet">✦</span> 
+                    <span className="benefit-text"><strong>Custom Coupon Code</strong>: Get a unique coupon code (e.g., <code>VIPINFLUENCER10</code>) to share with your audience.</span>
+                  </li>
+                  <li>
+                    <span className="bullet">✦</span> 
+                    <span className="benefit-text"><strong>Audience Discount</strong>: Your followers receive an instant discount on any VIP number they purchase.</span>
+                  </li>
+                  <li>
+                    <span className="bullet">✦</span> 
+                    <span className="benefit-text"><strong>Influencer Rewards</strong>: Earn attractive cash payouts or platform credits for every transaction made with your code.</span>
+                  </li>
+                  <li>
+                    <span className="bullet">✦</span> 
+                    <span className="benefit-text"><strong>Dashboard Tracking</strong>: Real-time insights into your coupon usage and earnings.</span>
+                  </li>
+                </ul>
+                <button className="apply-card-btn gold-apply-btn" onClick={() => onApplyClick('influencer')}>Apply Now →</button>
+              </div>
 
-        {/* How It Works Visual Flow */}
-        <div className="flow-section">
-          <h3>How It Works</h3>
-          <div className="flow-steps">
-            <div className="step">
-              <div className="step-num">1</div>
-              <h4>Join the Network</h4>
-              <p>Apply online. We will review your profile/business and issue a customized coupon code.</p>
+              {/* Business Program Card */}
+              <div className="program-card business-card">
+                <div className="card-badge gold-badge">BUSINESS PARTNER</div>
+                <h3>Business with Us</h3>
+                <p className="card-tagline">Incorporate premium mobile numbers into your service portfolio.</p>
+                <ul className="benefits-list">
+                  <li>
+                    <span className="bullet">✦</span> 
+                    <span className="benefit-text"><strong>Affiliate API & Tools</strong>: Offer VIP numbers to your existing client base under your own brand or as an affiliate.</span>
+                  </li>
+                  <li>
+                    <span className="bullet">✦</span> 
+                    <span className="benefit-text"><strong>Shared Coupon Incentives</strong>: Provide exclusive discounts to your corporate clients or network.</span>
+                  </li>
+                  <li>
+                    <span className="bullet">✦</span> 
+                    <span className="benefit-text"><strong>High Margin Returns</strong>: Secure special dealer pricing and high-percentage referral commissions.</span>
+                  </li>
+                  <li>
+                    <span className="bullet">✦</span> 
+                    <span className="benefit-text"><strong>Legal & Transfer Support</strong>: We handle all registration and transfer logistics, while you focus on sales.</span>
+                  </li>
+                </ul>
+                <button className="apply-card-btn gold-apply-btn" onClick={() => onApplyClick('business')}>Apply Now →</button>
+              </div>
             </div>
-            <div className="step-arrow">➔</div>
-            <div className="step">
-              <div className="step-num">2</div>
-              <h4>Promote & Share</h4>
-              <p>Share your coupon code on social media, websites, or directly with your clients.</p>
-            </div>
-            <div className="step-arrow">➔</div>
-            <div className="step">
-              <div className="step-num">3</div>
-              <h4>Earn Benefits</h4>
-              <p>Your users get discounts instantly, and you receive automated payouts or credits per purchase.</p>
+
+            {/* How It Works Visual Flow */}
+            <div className="flow-section">
+              <h3>How It Works</h3>
+              <div className="flow-steps">
+                <div className="step">
+                  <div className="step-num">1</div>
+                  <h4>Join the Network</h4>
+                  <p>Apply online. We will review your profile/business and issue a customized coupon code.</p>
+                </div>
+                <div className="step-arrow">➔</div>
+                <div className="step">
+                  <div className="step-num">2</div>
+                  <h4>Promote & Share</h4>
+                  <p>Share your coupon code on social media, websites, or directly with your clients.</p>
+                </div>
+                <div className="step-arrow">➔</div>
+                <div className="step">
+                  <div className="step-num">3</div>
+                  <h4>Earn Benefits</h4>
+                  <p>Your users get discounts instantly, and you receive automated payouts or credits per purchase.</p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
