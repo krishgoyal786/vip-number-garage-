@@ -944,18 +944,6 @@ function App() {
                 onCompareToggle={handleCompareToggle}
                 compareItems={compareItems}
               />
-              <AstroNumerologySection 
-                onBookClick={() => setIsBookingOpen(true)} 
-                onLoginClick={() => setIsLoginOpen(true)} 
-                user={user} 
-                onSelectLuckyDigit={(digit) => {
-                  setSearchCriteria(prev => ({
-                    ...prev,
-                    numerologySum: String(digit)
-                  }));
-                  scrollToSection('our-products');
-                }}
-              />
               <PositionalSearch searchCriteria={searchCriteria} onSearch={setSearchCriteria} />
               <CategoryTabs activeCategory={activeCategory} onCategoryChange={setActiveCategory} categories={categories} />
               {(activeCategory !== 'All' || 
@@ -986,6 +974,18 @@ function App() {
                   </button>
                 </div>
               )}
+              <AstroNumerologySection 
+                onBookClick={() => setIsBookingOpen(true)} 
+                onLoginClick={() => setIsLoginOpen(true)} 
+                user={user} 
+                onSelectLuckyDigit={(digit) => {
+                  setSearchCriteria(prev => ({
+                    ...prev,
+                    numerologySum: String(digit)
+                  }));
+                  scrollToSection('our-products');
+                }}
+              />
               <div id="request-number"><RequestForm onSubmit={handleRequestSubmit} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
               <div id="sell-number"><SellNumberForm onSubmit={handleSellRequestSubmit} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
             </div>
