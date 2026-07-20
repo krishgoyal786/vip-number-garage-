@@ -964,10 +964,11 @@ function App() {
                 compareItems={compareItems}
               />
               {catalogNumbers.length < totalNumbers && (
-                <div style={{ textAlign: 'center', marginTop: '40px' }}>
+                <div className="view-more-container">
+                  <p className="view-more-note">Click below to discover more premium VIP numbers</p>
                   <button 
                     onClick={() => fetchCatalog(catalogPage + 1, true)} 
-                    className="dashboard-btn"
+                    className="view-more-btn"
                     disabled={catalogLoading}
                   >
                     {catalogLoading ? 'Loading...' : 'View More Numbers'}
