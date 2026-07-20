@@ -6,6 +6,7 @@ import CategoryTabs from './components/CategoryTabs';
 import NumberList from './components/NumberList';
 import AboutUs from './components/AboutUs';
 import ContactUs from './components/ContactUs';
+import WhyChooseUs from './components/WhyChooseUs';
 import PartnerProgram from './components/PartnerProgram';
 import FAQ from './components/FAQ';
 import LoginModal from './components/LoginModal';
@@ -360,6 +361,16 @@ function App() {
     }
     if (sectionId === 'terms-conditions') {
       setView('terms');
+      window.scrollTo(0, 0);
+      return;
+    }
+    if (sectionId === 'about-us') {
+      setView('about-us');
+      window.scrollTo(0, 0);
+      return;
+    }
+    if (sectionId === 'about-why-us') {
+      setView('why-choose-us');
       window.scrollTo(0, 0);
       return;
     }
@@ -979,7 +990,6 @@ function App() {
               />
             </div>
             <div id="faq-section"><FAQ onSubmitQuery={handleAddQuery} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
-            <div id="about-us"><AboutUs /></div>
             <div id="contact-us"><ContactUs /></div>
           </>
         ) : view === 'dashboard' ? (
@@ -1038,6 +1048,16 @@ function App() {
               }, 100);
             }}
           />
+        ) : view === 'about-us' ? (
+          <div style={{ position: 'relative', padding: '40px 20px', minHeight: '70vh' }}>
+            <button className="floating-back-btn" onClick={() => setView('home')}>← Back to Home</button>
+            <AboutUs />
+          </div>
+        ) : view === 'why-choose-us' ? (
+          <div style={{ position: 'relative', padding: '40px 20px', minHeight: '70vh' }}>
+            <button className="floating-back-btn" onClick={() => setView('home')}>← Back to Home</button>
+            <WhyChooseUs />
+          </div>
         ) : null}
       </main>
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} onLogin={handleLogin} onSendOtp={handleSendOtp} />

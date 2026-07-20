@@ -41,100 +41,6 @@
   line-height: 1.8;
 }
 
-.about-why-us {
-  margin-top: 50px;
-  margin-bottom: 50px;
-}
-
-.about-why-us h3 {
-  text-align: center;
-  font-family: 'Cinzel', serif;
-  font-size: 1.6rem;
-  color: var(--primary-gold);
-  margin-bottom: 35px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.why-us-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 25px;
-}
-
-.why-us-card {
-  background: rgba(26, 26, 26, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 30px 25px;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.why-us-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(212, 175, 55, 0.3);
-  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.05);
-}
-
-.why-icon {
-  font-size: 1.5rem;
-  color: var(--primary-gold);
-  margin-bottom: 15px;
-}
-
-.why-us-card h4 {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--text-white);
-  margin-bottom: 10px;
-}
-
-.why-us-card p {
-  color: var(--text-gray);
-  font-size: 0.88rem;
-  line-height: 1.6;
-}
-
-.about-visit {
-  text-align: center;
-  padding: 40px 30px;
-  background: rgba(18, 18, 18, 0.5);
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.02);
-  margin-top: 50px;
-}
-
-.about-visit h3 {
-  font-family: 'Cinzel', serif;
-  font-size: 1.4rem;
-  color: var(--primary-gold);
-  margin-bottom: 15px;
-}
-
-.about-visit p {
-  color: var(--text-gray);
-  font-size: 0.95rem;
-  line-height: 1.7;
-  max-width: 800px;
-  margin: 0 auto 20px;
-}
-
-.office-address {
-  font-style: normal;
-  color: var(--text-white);
-  font-size: 0.95rem;
-  line-height: 1.6;
-  border-top: 1px dashed rgba(212, 175, 55, 0.2);
-  display: inline-block;
-  padding-top: 15px;
-  margin-top: 10px;
-}
-
 @media (max-width: 768px) {
   .about-us-box {
     padding: 40px 20px;
@@ -142,12 +48,5 @@
   .about-story-row {
     grid-template-columns: 1fr;
     gap: 30px;
-  }
-  .why-us-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  .about-visit {
-    padding: 30px 15px;
   }
 }
