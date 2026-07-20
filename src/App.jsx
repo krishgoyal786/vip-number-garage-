@@ -60,6 +60,14 @@ function App() {
   const [consultations, setConsultations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [backScrollPos, setBackScrollPos] = useState(0);
+
+  const handleBackToHome = () => {
+    setView('home');
+    setTimeout(() => {
+      window.scrollTo(0, backScrollPos);
+    }, 50);
+  };
 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -355,21 +363,25 @@ function App() {
 
   const scrollToSection = (sectionId) => {
     if (sectionId === 'privacy-policy') {
+      setBackScrollPos(window.pageYOffset);
       setView('privacy');
       window.scrollTo(0, 0);
       return;
     }
     if (sectionId === 'terms-conditions') {
+      setBackScrollPos(window.pageYOffset);
       setView('terms');
       window.scrollTo(0, 0);
       return;
     }
     if (sectionId === 'about-us') {
+      setBackScrollPos(window.pageYOffset);
       setView('about-us');
       window.scrollTo(0, 0);
       return;
     }
     if (sectionId === 'about-why-us') {
+      setBackScrollPos(window.pageYOffset);
       setView('why-choose-us');
       window.scrollTo(0, 0);
       return;
@@ -984,6 +996,7 @@ function App() {
                 showFormOnly={false}
                 onApplyClick={(type) => {
                   setPartnerProgramType(type);
+                  setBackScrollPos(window.pageYOffset);
                   setView('partner-apply');
                   window.scrollTo(0, 0);
                 }}
@@ -1026,12 +1039,12 @@ function App() {
           />
         ) : view === 'privacy' ? (
           <div style={{ position: 'relative', padding: '40px 20px', minHeight: '70vh' }}>
-            <button className="floating-back-btn" onClick={() => setView('home')}>← Back to Home</button>
+            <button className="floating-back-btn" onClick={handleBackToHome}>← Back to Home</button>
             <PrivacyPolicy />
           </div>
         ) : view === 'terms' ? (
           <div style={{ position: 'relative', padding: '40px 20px', minHeight: '70vh' }}>
-            <button className="floating-back-btn" onClick={() => setView('home')}>← Back to Home</button>
+            <button className="floating-back-btn" onClick={handleBackToHome}>← Back to Home</button>
             <TermsConditions />
           </div>
         ) : view === 'partner-apply' ? (
@@ -1040,22 +1053,16 @@ function App() {
             user={user} 
             showFormOnly={true} 
             initialProgramType={partnerProgramType} 
-            onBackClick={() => {
-              setView('home');
-              setTimeout(() => {
-                const element = document.getElementById('partner-program');
-                if (element) element.scrollIntoView({ behavior: 'smooth' });
-              }, 100);
-            }}
+            onBackClick={handleBackToHome}
           />
         ) : view === 'about-us' ? (
           <div style={{ position: 'relative', padding: '40px 20px', minHeight: '70vh' }}>
-            <button className="floating-back-btn" onClick={() => setView('home')}>← Back to Home</button>
+            <button className="floating-back-btn" onClick={handleBackToHome}>← Back to Home</button>
             <AboutUs />
           </div>
         ) : view === 'why-choose-us' ? (
           <div style={{ position: 'relative', padding: '40px 20px', minHeight: '70vh' }}>
-            <button className="floating-back-btn" onClick={() => setView('home')}>← Back to Home</button>
+            <button className="floating-back-btn" onClick={handleBackToHome}>← Back to Home</button>
             <WhyChooseUs />
           </div>
         ) : null}
