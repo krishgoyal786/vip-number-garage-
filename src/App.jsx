@@ -23,7 +23,6 @@ import AstroNumerologySection from './components/AstroNumerologySection';
 import BookingModal from './components/BookingModal';
 import CompareDrawer from './components/CompareDrawer';
 import MyOrdersModal from './components/MyOrdersModal';
-import BrowseCategories from './components/BrowseCategories';
 import './App.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
@@ -986,13 +985,6 @@ function App() {
                   }));
                   scrollToSection('our-products');
                 }}
-              />
-              <BrowseCategories 
-                categories={categories} 
-                onCategoryClick={(catName) => {
-                  setActiveCategory(catName);
-                  scrollToSection('our-products');
-                }} 
               />
               <div id="request-number"><RequestForm onSubmit={handleRequestSubmit} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
               <div id="sell-number"><SellNumberForm onSubmit={handleSellRequestSubmit} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
