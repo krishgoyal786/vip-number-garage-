@@ -29,7 +29,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000
 
 function App() {
   const [activeCategory, setActiveCategory] = useState('All');
-  const [visibleCount, setVisibleCount] = useState(18);
+  const [visibleCount, setVisibleCount] = useState(20);
   const [categories, setCategories] = useState([]);
   const [searchCriteria, setSearchCriteria] = useState({ 
     digits: Array(10).fill(''), 
@@ -97,7 +97,7 @@ function App() {
       
       const params = new URLSearchParams({
         page: pageNumber,
-        limit: 18,
+        limit: 20,
         category: activeCategory,
         carrier: carrier,
         minPrice: budget.min,
@@ -206,7 +206,7 @@ function App() {
   }, [activeCategory, searchCriteria]);
 
   useEffect(() => {
-    setVisibleCount(18);
+    setVisibleCount(20);
   }, [activeCategory, searchCriteria]);
 
   useEffect(() => {

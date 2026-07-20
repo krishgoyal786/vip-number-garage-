@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
   try {
     const { 
       page = 1, 
-      limit = 18, 
+      limit = 20, 
       category = 'All', 
       carrier = 'all', 
       minPrice, 
