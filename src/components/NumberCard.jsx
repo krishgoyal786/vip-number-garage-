@@ -20,9 +20,12 @@ const NumberCard = ({ item, onAddToCart, onBuyNow, isInCart, index, onCompareTog
     
     let highlightCount = 3; // Default highlight last 3 digits
     
-    // 1. Check for 00X00 pattern (like 00500)
+    // 1. Check for 000X00 and 00X00 patterns
+    const tripleZeroPattern = /000\d00$/;
     const doubleZeroPattern = /00\d00$/;
-    if (doubleZeroPattern.test(cleanNum)) {
+    if (tripleZeroPattern.test(cleanNum)) {
+      highlightCount = 6;
+    } else if (doubleZeroPattern.test(cleanNum)) {
       highlightCount = 5;
     } else {
       // 2. Check for repeating ending digits (e.g. 777, 8888)
