@@ -11,34 +11,60 @@ const NumberCard = ({ item, onAddToCart, onBuyNow, isInCart, index, onCompareTog
 
   const operator = item.operator || 'Airtel';
 
-  // Parsing trailing fancy digits for gold highlight
+  // Parsing trailing fancy digits for gold highlight and dimming rest of the digits
   const formatNumberWithHighlight = (numString) => {
     if (!numString) return '';
     const cleanNum = numString.replace(/[-\s]/g, '');
     const len = cleanNum.length;
-    if (len < 4) return numString;
+    if (len < 5) return numString;
     
-    let repeatCount = 1;
-    const lastChar = cleanNum[len - 1];
-    for (let i = len - 2; i >= 0; i--) {
-      if (cleanNum[i] === lastChar) {
-        repeatCount++;
-      } else {
-        break;
+    let highlightCount = 3; // Default highlight last 3 digits
+    
+    // 1. Check for 00X00 pattern (like 00500)
+    const doubleZeroPattern = /00\d00$/;
+    if (doubleZeroPattern.test(cleanNum)) {
+      highlightCount = 5;
+    } else {
+      // 2. Check for repeating ending digits (e.g. 777, 8888)
+      let repeatCount = 1;
+      const lastChar = cleanNum[len - 1];
+      for (let i = len - 2; i >= 0; i--) {
+        if (cleanNum[i] === lastChar) {
+          repeatCount++;
+        } else {
+          break;
+        }
+      }
+      if (repeatCount >= 3) {
+        highlightCount = repeatCount;
+      } else if (cleanNum.endsWith('786')) {
+        // 3. Check for 786 ending
+        highlightCount = 3;
       }
     }
     
-    if (repeatCount >= 3) {
-      const normalPart = numString.substring(0, numString.length - repeatCount);
-      const highlightPart = numString.substring(numString.length - repeatCount);
-      return (
-        <>
-          {normalPart}
-          <span className="fancy-highlight">{highlightPart}</span>
-        </>
-      );
+    // Split based on highlightCount from back
+    let digitCount = 0;
+    let splitIndex = numString.length;
+    for (let i = numString.length - 1; i >= 0; i--) {
+      if (/\d/.test(numString[i])) {
+        digitCount++;
+        if (digitCount === highlightCount) {
+          splitIndex = i;
+          break;
+        }
+      }
     }
-    return numString;
+    
+    const normalPart = numString.substring(0, splitIndex);
+    const highlightPart = numString.substring(splitIndex);
+    
+    return (
+      <>
+        <span className="dim-digits">{normalPart}</span>
+        <span className="fancy-highlight">{highlightPart}</span>
+      </>
+    );
   };
 
   const handleShare = (e) => {

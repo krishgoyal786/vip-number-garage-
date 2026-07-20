@@ -200,6 +200,15 @@
   text-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
 }
 
+.dim-digits {
+  color: #4a4a4a;
+  transition: color 0.3s ease;
+}
+
+.number-card:hover .dim-digits {
+  color: #666666;
+}
+
 .number-card:hover .display-number {
   transform: scale(1.02);
   filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
