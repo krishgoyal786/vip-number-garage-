@@ -4,7 +4,6 @@ import Hero from './components/Hero';
 import PositionalSearch from './components/PositionalSearch';
 import CategoryTabs from './components/CategoryTabs';
 import NumberList from './components/NumberList';
-import HowItWorks from './components/HowItWorks';
 import AboutUs from './components/AboutUs';
 import ContactUs from './components/ContactUs';
 import PartnerProgram from './components/PartnerProgram';
@@ -967,7 +966,6 @@ function App() {
               <div id="request-number"><RequestForm onSubmit={handleRequestSubmit} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
               <div id="sell-number"><SellNumberForm onSubmit={handleSellRequestSubmit} user={user} onLoginClick={() => setIsLoginOpen(true)} /></div>
             </div>
-            <div id="how-it-works"><HowItWorks /></div>
             <div id="partner-program">
               <PartnerProgram 
                 onSubmitQuery={handleAddQuery} 
