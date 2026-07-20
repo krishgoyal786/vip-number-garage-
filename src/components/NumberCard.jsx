@@ -17,44 +17,60 @@ const NumberCard = ({ item, onAddToCart, onBuyNow, isInCart, index, onCompareTog
     const cleanNum = numString.replace(/[-\s]/g, '');
     const len = cleanNum.length;
     if (len < 5) return numString;
-    
-    let highlightCount = 3; // Default highlight last 3 digits
-    
-    // 1. Check for distinct trailing VIP patterns (from longest to shortest)
-    const fourZeroTwoDigitPattern = /0000\d{2}$/;
-    const tripleZeroDoubleZeroPattern = /000\d00$/;
-    const digitThreeZeroDigitPattern = /\d000\d$/;
-    const doubleZeroPattern = /00\d00$/;
-    const tripleZeroDigitPattern = /000\d$/;
 
-    if (fourZeroTwoDigitPattern.test(cleanNum)) {
-      highlightCount = 6;
-    } else if (tripleZeroDoubleZeroPattern.test(cleanNum)) {
-      highlightCount = 6;
-    } else if (digitThreeZeroDigitPattern.test(cleanNum)) {
-      highlightCount = 5;
-    } else if (doubleZeroPattern.test(cleanNum)) {
-      highlightCount = 5;
-    } else if (tripleZeroDigitPattern.test(cleanNum)) {
-      highlightCount = 4;
-    } else {
-      // 2. Check for repeating ending digits (e.g. 777, 8888)
-      let repeatCount = 1;
-      const lastChar = cleanNum[len - 1];
-      for (let i = len - 2; i >= 0; i--) {
-        if (cleanNum[i] === lastChar) {
-          repeatCount++;
-        } else {
-          break;
+    // Helper algorithm to dynamically identify the length of a trailing VIP pattern (from longest to shortest)
+    const getVipHighlightLength = () => {
+      for (let L = 7; L >= 3; L--) {
+        if (L > len) continue;
+        const segment = cleanNum.substring(len - L);
+        
+        // A. Check for 786 ending
+        if (L === 3 && segment === '786') return 3;
+
+        // B. Check if it's a repeating digit (e.g. 555, 7777, 88888)
+        const isRepeat = segment.split('').every(char => char === segment[0]);
+        if (isRepeat && L >= 3) return L;
+
+        // C. Check for zero-centric patterns (like 0001, 10001, 00500, 000012)
+        // Must contain at least L-2 zeros, and L >= 4
+        const zeroCount = (segment.match(/0/g) || []).length;
+        if (L >= 4 && zeroCount >= L - 2 && zeroCount >= 3) return L;
+
+        // D. Check for step sequences (e.g., 1234, 56789, 9876)
+        if (L >= 4) {
+          let isUpStep = true;
+          let isDownStep = true;
+          for (let i = 1; i < L; i++) {
+            const prev = parseInt(segment[i - 1]);
+            const curr = parseInt(segment[i]);
+            if (curr !== prev + 1) isUpStep = false;
+            if (curr !== prev - 1) isDownStep = false;
+          }
+          if (isUpStep || isDownStep) return L;
+        }
+
+        // E. Check for repeating pairs / alternating (e.g., 1212, 123123)
+        if (L >= 4 && L % 2 === 0) {
+          const half = L / 2;
+          const firstHalf = segment.substring(0, half);
+          const secondHalf = segment.substring(half);
+          if (firstHalf === secondHalf) return L;
+        }
+
+        // F. Check for double/triple pairs (e.g. 1122, 111222)
+        if (L === 4 && segment[0] === segment[1] && segment[2] === segment[3]) return 4;
+        if (L === 6 && segment[0] === segment[1] && segment[1] === segment[2] && segment[3] === segment[4] && segment[4] === segment[5]) return 6;
+
+        // G. Check for palindromes / mirror sequences (e.g. 12321, 50905)
+        if (L >= 5) {
+          const reversed = segment.split('').reverse().join('');
+          if (segment === reversed) return L;
         }
       }
-      if (repeatCount >= 3) {
-        highlightCount = repeatCount;
-      } else if (cleanNum.endsWith('786')) {
-        // 3. Check for 786 ending
-        highlightCount = 3;
-      }
-    }
+      return 3; // Default fallback to highlight last 3 digits
+    };
+
+    const highlightCount = getVipHighlightLength();
     
     // Split based on highlightCount from back
     let digitCount = 0;
