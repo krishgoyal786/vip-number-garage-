@@ -970,7 +970,7 @@ function App() {
                     className="dashboard-btn"
                     disabled={catalogLoading}
                   >
-                    {catalogLoading ? 'Loading...' : 'Load More Numbers'}
+                    {catalogLoading ? 'Loading...' : 'View More Numbers'}
                   </button>
                 </div>
               )}
