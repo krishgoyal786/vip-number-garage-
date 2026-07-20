@@ -212,19 +212,19 @@ const PartnerProgram = ({ onSubmitQuery, user, showFormOnly = false, initialProg
             <ul className="benefits-list">
               <li>
                 <span className="bullet">✦</span> 
-                <strong>Custom Coupon Code</strong>: Get a unique coupon code (e.g., <code>VIPINFLUENCER10</code>) to share with your audience.
+                <span><strong>Custom Coupon Code</strong>: Get a unique coupon code (e.g., <code>VIPINFLUENCER10</code>) to share with your audience.</span>
               </li>
               <li>
                 <span className="bullet">✦</span> 
-                <strong>Audience Discount</strong>: Your followers receive an instant discount on any VIP number they purchase.
+                <span><strong>Audience Discount</strong>: Your followers receive an instant discount on any VIP number they purchase.</span>
               </li>
               <li>
                 <span className="bullet">✦</span> 
-                <strong>Influencer Rewards</strong>: Earn attractive cash payouts or platform credits for every transaction made with your code.
+                <span><strong>Influencer Rewards</strong>: Earn attractive cash payouts or platform credits for every transaction made with your code.</span>
               </li>
               <li>
                 <span className="bullet">✦</span> 
-                <strong>Dashboard Tracking</strong>: Real-time insights into your coupon usage and earnings.
+                <span><strong>Dashboard Tracking</strong>: Real-time insights into your coupon usage and earnings.</span>
               </li>
             </ul>
             <button className="apply-card-btn gold-apply-btn" onClick={() => onApplyClick('influencer')}>Apply Now →</button>
@@ -238,19 +238,19 @@ const PartnerProgram = ({ onSubmitQuery, user, showFormOnly = false, initialProg
             <ul className="benefits-list">
               <li>
                 <span className="bullet">✦</span> 
-                <strong>Affiliate API & Tools</strong>: Offer VIP numbers to your existing client base under your own brand or as an affiliate.
+                <span><strong>Affiliate API & Tools</strong>: Offer VIP numbers to your existing client base under your own brand or as an affiliate.</span>
               </li>
               <li>
                 <span className="bullet">✦</span> 
-                <strong>Shared Coupon Incentives</strong>: Provide exclusive discounts to your corporate clients or network.
+                <span><strong>Shared Coupon Incentives</strong>: Provide exclusive discounts to your corporate clients or network.</span>
               </li>
               <li>
                 <span className="bullet">✦</span> 
-                <strong>High Margin Returns</strong>: Secure special dealer pricing and high-percentage referral commissions.
+                <span><strong>High Margin Returns</strong>: Secure special dealer pricing and high-percentage referral commissions.</span>
               </li>
               <li>
                 <span className="bullet">✦</span> 
-                <strong>Legal & Transfer Support</strong>: We handle all registration and transfer logistics, while you focus on sales.
+                <span><strong>Legal & Transfer Support</strong>: We handle all registration and transfer logistics, while you focus on sales.</span>
               </li>
             </ul>
             <button className="apply-card-btn gold-apply-btn" onClick={() => onApplyClick('business')}>Apply Now →</button>

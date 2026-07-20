@@ -111,17 +111,27 @@
   gap: 10px;
 }
 
+.benefits-list li > span:not(.bullet) {
+  flex: 1;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
 .benefits-list li code {
   background: rgba(212, 175, 55, 0.15);
   color: var(--accent-gold);
   padding: 2px 6px;
   border-radius: 4px;
   font-family: monospace;
+  word-break: break-all;
+  display: inline-block;
+  max-width: 100%;
 }
 
 .bullet {
   color: var(--primary-gold);
   font-weight: bold;
+  flex-shrink: 0;
 }
 
 /* How It Works Flow */
