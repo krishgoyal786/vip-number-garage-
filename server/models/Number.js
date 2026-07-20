@@ -21,4 +21,9 @@ numberSchema.pre('save', function() {
   }
 });
 
+// Indexes for ultra-fast query performance
+numberSchema.index({ isSold: 1, category: 1, price: 1 });
+numberSchema.index({ cleanNumber: 1 });
+numberSchema.index({ singleDigitSum: 1 });
+
 module.exports = mongoose.model('Number', numberSchema);
