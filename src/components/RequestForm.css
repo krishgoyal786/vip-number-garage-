@@ -76,6 +76,26 @@
   cursor: pointer;
 }
 
+.input-field-group {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+}
+
+.error-border {
+  border-color: #ff4d4d !important;
+  box-shadow: 0 0 5px rgba(255, 77, 77, 0.4) !important;
+}
+
+.field-error-text {
+  color: #ff4d4d;
+  font-size: 0.75rem;
+  margin-top: 5px;
+  margin-left: 5px;
+  font-weight: 500;
+}
+
 @media (max-width: 600px) {
   .request-form-box {
     padding: 25px 15px;

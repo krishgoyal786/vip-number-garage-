@@ -128,6 +128,19 @@
   100% { transform: scale(1); }
 }
 
+.error-border {
+  border-color: #ff4d4d !important;
+  box-shadow: 0 0 5px rgba(255, 77, 77, 0.4) !important;
+}
+
+.field-error-text {
+  color: #ff4d4d;
+  font-size: 0.75rem;
+  margin-top: 2px;
+  margin-left: 2px;
+  font-weight: 500;
+}
+
 @media (max-width: 600px) {
   .sell-form-box {
     padding: 30px 20px;
