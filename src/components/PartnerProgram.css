@@ -139,17 +139,19 @@
 /* How It Works Flow */
 .flow-section {
   text-align: center;
-  margin-bottom: 60px;
-  padding: 45px 30px;
-  background: rgba(18, 18, 18, 0.5);
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.02);
+  margin-top: 50px;
+  padding: 50px 0 0 0;
+  border-top: 1px dashed rgba(212, 175, 55, 0.2);
+  background: transparent;
 }
 
 .flow-section h3 {
-  font-size: 1.6rem;
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  color: var(--primary-gold);
   margin-bottom: 40px;
   text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .flow-steps {
