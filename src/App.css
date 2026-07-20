@@ -33,7 +33,7 @@ footer {
   margin: 0 auto;
   padding: 0 24px;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 40px;
 }
 

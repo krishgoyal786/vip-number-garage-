@@ -1112,24 +1112,6 @@ function App() {
               <li onClick={() => { setView('terms'); window.scrollTo(0, 0); }}>Terms & Conditions</li>
             </ul>
           </div>
-          
-          <div className="footer-col">
-            <h3>Contact Support</h3>
-            <div className="footer-contact-info">
-              <div className="footer-contact-item">
-                📞 <strong>Phone:</strong> <a href="tel:+919855598544" style={{ color: 'inherit', textDecoration: 'none' }}>+91 98555-98544</a>, <a href="tel:+917690000070" style={{ color: 'inherit', textDecoration: 'none' }}>+91 76900-00070</a>
-              </div>
-              <div className="footer-contact-item">
-                ✉️ <strong>Email:</strong> support@vipnumbergarage.com
-              </div>
-              <div className="footer-contact-item">
-                📍 <strong>Address:</strong> Hathi Mandir Street, Bathinda, Punjab
-              </div>
-              <div className="footer-contact-item" style={{ marginTop: '10px', fontSize: '0.8rem', color: '#666' }}>
-                🕒 <strong>Hours:</strong> Mon - Sat: 10:00 AM - 6:00 PM
-              </div>
-            </div>
-          </div>
         </div>
         
         <div className="footer-bottom">
