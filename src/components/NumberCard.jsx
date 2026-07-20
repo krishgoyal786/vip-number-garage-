@@ -20,13 +20,23 @@ const NumberCard = ({ item, onAddToCart, onBuyNow, isInCart, index, onCompareTog
     
     let highlightCount = 3; // Default highlight last 3 digits
     
-    // 1. Check for 000X00 and 00X00 patterns
-    const tripleZeroPattern = /000\d00$/;
+    // 1. Check for distinct trailing VIP patterns (from longest to shortest)
+    const fourZeroTwoDigitPattern = /0000\d{2}$/;
+    const tripleZeroDoubleZeroPattern = /000\d00$/;
+    const digitThreeZeroDigitPattern = /\d000\d$/;
     const doubleZeroPattern = /00\d00$/;
-    if (tripleZeroPattern.test(cleanNum)) {
+    const tripleZeroDigitPattern = /000\d$/;
+
+    if (fourZeroTwoDigitPattern.test(cleanNum)) {
       highlightCount = 6;
+    } else if (tripleZeroDoubleZeroPattern.test(cleanNum)) {
+      highlightCount = 6;
+    } else if (digitThreeZeroDigitPattern.test(cleanNum)) {
+      highlightCount = 5;
     } else if (doubleZeroPattern.test(cleanNum)) {
       highlightCount = 5;
+    } else if (tripleZeroDigitPattern.test(cleanNum)) {
+      highlightCount = 4;
     } else {
       // 2. Check for repeating ending digits (e.g. 777, 8888)
       let repeatCount = 1;
