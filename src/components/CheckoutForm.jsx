@@ -4,6 +4,7 @@ import './CheckoutForm.css';
 const CheckoutForm = ({ user, totalAmount, onSubmit, onCancel, onPrivacyClick, onTermsClick }) => {
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFetchingPincode, setIsFetchingPincode] = useState(false);
   const [details, setDetails] = useState({
     name: user?.name || '',
     phone: user?.phone || '',
@@ -13,6 +14,31 @@ const CheckoutForm = ({ user, totalAmount, onSubmit, onCancel, onPrivacyClick, o
     state: '',
     pincode: ''
   });
+
+  const handlePincodeChange = async (e) => {
+    const pin = e.target.value.replace(/\D/g, '').substring(0, 6);
+    setDetails(prev => ({ ...prev, pincode: pin }));
+
+    if (pin.length === 6) {
+      setIsFetchingPincode(true);
+      try {
+        const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+        const data = await res.json();
+        if (data && data[0] && data[0].Status === 'Success' && data[0].PostOffice && data[0].PostOffice.length > 0) {
+          const postOffice = data[0].PostOffice[0];
+          setDetails(prev => ({
+            ...prev,
+            city: postOffice.District || prev.city,
+            state: postOffice.State || prev.state
+          }));
+        }
+      } catch (err) {
+        console.error('Failed to auto-fetch city and state from pincode:', err);
+      } finally {
+        setIsFetchingPincode(false);
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,18 +96,19 @@ const CheckoutForm = ({ user, totalAmount, onSubmit, onCancel, onPrivacyClick, o
             ></textarea>
             <div className="form-grid">
               <input 
-                type="text" placeholder="City" 
+                type="text" placeholder="Pincode" 
+                value={details.pincode} onChange={handlePincodeChange} 
+                maxLength={6}
+                required 
+              />
+              <input 
+                type="text" placeholder={isFetchingPincode ? "Fetching City..." : "City"} 
                 value={details.city} onChange={(e) => setDetails({...details, city: e.target.value})} 
                 required 
               />
               <input 
-                type="text" placeholder="State" 
+                type="text" placeholder={isFetchingPincode ? "Fetching State..." : "State"} 
                 value={details.state} onChange={(e) => setDetails({...details, state: e.target.value})} 
-                required 
-              />
-              <input 
-                type="text" placeholder="Pincode" 
-                value={details.pincode} onChange={(e) => setDetails({...details, pincode: e.target.value})} 
                 required 
               />
             </div>
