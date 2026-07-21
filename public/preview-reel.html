@@ -410,6 +410,65 @@
       text-transform: uppercase;
       margin-top: 10px;
     }
+
+    /* Vertical Spacing Fillers */
+    .scene-top-tag {
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: var(--primary-gold);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    }
+    
+    .price-tag-container {
+      margin-top: 25px;
+      animation: fadeInUp 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .price-tag {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 1px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px 24px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      display: inline-block;
+    }
+
+    .price-label {
+      font-size: 0.65rem;
+      color: #8c8c96;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .feature-bullets-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+      animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .feature-bullet {
+      font-size: 0.8rem;
+      color: #8c8c96;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    .feature-bullet::before {
+      content: '✦ ';
+      color: var(--primary-gold);
+      margin-right: 3px;
+    }
   </style>
 </head>
 <body>
@@ -441,12 +500,14 @@
 
       <!-- SCENE 1: THE HOOK (0s - 3s) -->
       <div class="scene-element scene-1">
+        <div class="scene-top-tag">✦ Brand Power ✦</div>
         <h1 class="title-large">IS YOUR BRAND<br><span class="gold-shimmer-text highlight-gold">STANDOUT?</span></h1>
         <div class="tagline-sub">Your mobile number is the first thing clients see. Make it unforgettable.</div>
       </div>
 
       <!-- SCENE 2: THE NUMBER (3s - 7s) -->
       <div class="scene-element scene-2">
+        <div class="scene-top-tag">✦ Exclusive Find ✦</div>
         <div class="vip-glass-card">
           <span class="badge-premium">ROYALTY SERIES</span>
           <div class="number-display">
@@ -454,10 +515,19 @@
           </div>
           <div class="tagline-sub" style="color: #bf953f; font-weight: 600; font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 2px;">James Bond Style Ending</div>
         </div>
+        <div class="price-tag-container">
+          <span class="price-label">Offer Price</span>
+          <div class="price-tag">₹1,50,000</div>
+        </div>
+        <div class="feature-bullets-container">
+          <span class="feature-bullet">Jio/Airtel/Vi</span>
+          <span class="feature-bullet">Free Porting</span>
+        </div>
       </div>
 
       <!-- SCENE 3: TRUST SECURITY (7s - 10s) -->
       <div class="scene-element scene-3">
+        <div class="scene-top-tag">✦ Client Safety ✦</div>
         <div class="secure-warning-card">
           <h3>⚠️ SECURITY NOTICE</h3>
           <div class="tagline-sub" style="color: #e2e2e8; font-size: 0.85rem; margin-bottom: 15px;">
@@ -466,12 +536,14 @@
           <span class="official-num" style="color: #bf953f;">+91 98555-98544</span>
           <span class="official-num" style="color: #bf953f;">+91 76900-00070</span>
         </div>
+        <div class="tagline-sub" style="font-size: 0.8rem; color: #77777d; margin-top: 25px;">Avoid dealing with third-party agents.</div>
       </div>
 
       <!-- SCENE 4: CALL TO ACTION TEXT (10s - 12s) -->
       <div class="scene-element scene-4">
+        <div class="scene-top-tag">✦ Limited Time ✦</div>
         <h1 class="title-large">COMMENT <span class="gold-shimmer-text highlight-gold">"VIP"</span><br>FOR DIRECT LINK</h1>
-        <div class="tagline-sub" style="color: #ffffff; font-weight: 400;">Reserve this exclusive number today.</div>
+        <div class="tagline-sub" style="color: #ffffff; font-weight: 400; margin-bottom: 25px;">Reserve this exclusive number today.</div>
       </div>
 
     </div>
