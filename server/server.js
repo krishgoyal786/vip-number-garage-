@@ -3,6 +3,12 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+// Enforce secure JWT configuration in production
+if (process.env.NODE_ENV === 'production' && (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'secret')) {
+  console.error("❌ CRITICAL ERROR: JWT_SECRET environment variable is not configured or set to default 'secret' in production! Server shutting down for security.");
+  process.exit(1);
+}
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 

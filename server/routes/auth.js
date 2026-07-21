@@ -83,7 +83,10 @@ router.post('/send-otp', async (req, res) => {
         console.log(`✉️ OTP email sent successfully to ${email}`);
         return res.json({ message: 'OTP sent successfully to email' });
       } catch (mailErr) {
-        console.warn(`⚠️ SMTP send failed (likely port blocked by host). Falling back to simulated OTP. Error:`, mailErr.message);
+        console.warn(`⚠️ SMTP send failed. Error:`, mailErr.message);
+        if (process.env.NODE_ENV === 'production') {
+          return res.status(500).json({ message: 'Failed to send OTP email. Please try again later.' });
+        }
         return res.json({ 
           message: 'OTP sent successfully (Simulated mode due to host mail restriction)', 
           simulated: true,
@@ -91,6 +94,10 @@ router.post('/send-otp', async (req, res) => {
         });
       }
     } else {
+      if (process.env.NODE_ENV === 'production') {
+        console.error("❌ SMTP email configuration is missing in production!");
+        return res.status(500).json({ message: 'Email configuration is missing on server.' });
+      }
       // Fallback Mode (Console logging for testing and cost saving during development)
       console.log(`\n========================================`);
       console.log(`📧 SIMULATED EMAIL OTP`);
@@ -101,7 +108,7 @@ router.post('/send-otp', async (req, res) => {
       res.json({ 
         message: 'OTP sent successfully (Simulated mode)', 
         simulated: true,
-        otp: process.env.NODE_ENV === 'production' ? undefined : otp 
+        otp: otp 
       });
     }
   } catch (err) {
