@@ -34,7 +34,16 @@ const NumberCard = ({ item, onAddToCart, onBuyNow, isInCart, index, onCompareTog
         // C. Check for zero-centric patterns (like 0001, 10001, 00500, 000012)
         // Must contain at least L-2 zeros, and L >= 4
         const zeroCount = (segment.match(/0/g) || []).length;
-        if (L >= 4 && zeroCount >= L - 2 && zeroCount >= 3) return L;
+        if (L >= 4 && zeroCount >= L - 2 && zeroCount >= 3) {
+          // If the segment starts with a non-zero digit, make sure all non-zero digits are the same.
+          // Otherwise, it's likely a random leading digit (e.g. 6 in 6000900) instead of a cohesive pattern.
+          if (segment[0] !== '0') {
+            const nonZeros = segment.split('').filter(char => char !== '0');
+            const allSameNonZero = nonZeros.every(char => char === nonZeros[0]);
+            if (!allSameNonZero) continue;
+          }
+          return L;
+        }
 
         // D. Check for step sequences (e.g., 1234, 56789, 9876)
         if (L >= 4) {
