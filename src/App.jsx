@@ -456,7 +456,7 @@ function App() {
   const handleBuyNow = (item) => { addToCart(item); if (!item.isSold) setIsCartOpen(true); logActivity("Clicked Buy Now", `Number: ${item.number}`); };
   const removeFromCart = (id) => { setCartItems(cartItems.filter(item => item._id !== id)); };
 
-  const startCheckout = () => {
+  const startCheckout = async () => {
     if (!user || !token) {
       setIsCartOpen(false);
       setIsLoginOpen(true);
@@ -464,13 +464,28 @@ function App() {
       return;
     }
 
-    const hasUnavailableItem = cartItems.some(item => {
-      const dbItem = inventory.find(i => i._id === item._id);
-      return !dbItem || dbItem.isSold;
-    });
+    if (cartItems.length === 0) return;
 
-    if (hasUnavailableItem) {
-      alert("One or more numbers in your cart are no longer available or have been sold. Please remove them from your cart to check out.");
+    try {
+      const ids = cartItems.map(item => item._id).join(',');
+      const res = await fetch(`${API_BASE_URL}/numbers?ids=${ids}&limit=100`);
+      if (res.ok) {
+        const data = await res.json();
+        const availableNumbers = data.numbers || [];
+        const availableIds = new Set(availableNumbers.map(n => n._id));
+        
+        const hasUnavailableItem = cartItems.some(item => !availableIds.has(item._id));
+        if (hasUnavailableItem) {
+          alert("One or more numbers in your cart are no longer available or have been sold. Please remove them from your cart to check out.");
+          return;
+        }
+      } else {
+        alert("Failed to verify item availability. Please try again.");
+        return;
+      }
+    } catch (err) {
+      console.error("Error verifying cart availability:", err);
+      alert("Error connecting to server. Please try again.");
       return;
     }
 

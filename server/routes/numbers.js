@@ -23,10 +23,15 @@ router.get('/', async (req, res) => {
       numerologySum,
       searchDigits, // comma-separated digits for position search, e.g. "*,*,*,*,*,9,8,5,*,*"
       sort = 'none',
-      adminMode = 'false'
+      adminMode = 'false',
+      ids
     } = req.query;
 
     const query = {};
+
+    if (ids) {
+      query._id = { $in: ids.split(',') };
+    }
     
     // Only exclude sold numbers for public users
     if (adminMode !== 'true') {
