@@ -30,6 +30,14 @@
       overflow: hidden;
     }
 
+    /* Outer Wrapper to Align Control Panel and Canvas */
+    .main-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      z-index: 5;
+    }
+
     /* 9:16 Cinematic Mobile Frame with Gold Foil Border */
     .video-canvas {
       width: 360px;
@@ -40,7 +48,7 @@
       position: relative;
       overflow: hidden;
       box-shadow: 0 25px 75px rgba(0, 0, 0, 0.95), 0 0 35px rgba(212, 175, 55, 0.15);
-      perspective: 1000px; /* Enforces 3D space depth */
+      perspective: 1000px;
     }
 
     /* Shifting Ambient Luxury Lighting */
@@ -474,99 +482,345 @@
       to { transform: scale(1); opacity: 1; }
     }
 
-    /* Screen recording helper badge */
-    .recording-badge {
-      font-size: 0.65rem;
-      color: #55555c;
+    /* ============================================================ */
+    /* CONTROL PANEL STYLES (Floating Side Utility)                */
+    /* ============================================================ */
+    .control-panel {
+      width: 260px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .control-panel h2 {
+      margin: 0;
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: var(--primary-gold);
       letter-spacing: 1px;
       text-transform: uppercase;
-      margin-top: 10px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+      padding-bottom: 10px;
+    }
+
+    .control-panel p {
+      font-size: 0.8rem;
+      color: #9c9ca6;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .export-btn {
+      width: 100%;
+      background: var(--gold-gradient);
+      background-size: 200% auto;
+      color: #000000;
+      border: 1px solid rgba(255,255,255,0.1);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 12px;
+      font-size: 0.85rem;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(187,143,40,0.25);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: shimmerSweep 3.5s linear infinite;
+    }
+
+    .export-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(187,143,40,0.4);
+    }
+
+    .export-btn:disabled {
+      cursor: not-allowed;
+    }
+
+    .status-bar {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #8c8c96;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.01);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.3s;
+    }
+
+    .steps {
+      font-size: 0.72rem;
+      color: #8c8c96;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 12px;
+    }
+
+    .steps ol {
+      margin: 8px 0 0 0;
+      padding-left: 15px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .main-wrapper {
+        flex-direction: column;
+        gap: 30px;
+        overflow-y: auto;
+        padding: 20px;
+        box-sizing: border-box;
+        height: 100vh;
+      }
+      .control-panel {
+        width: 100%;
+        max-width: 320px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Mobile screen container -->
-  <div class="video-canvas">
-    
-    <!-- Animated Light Assets -->
-    <div class="ambient-glow-gold"></div>
-    <div class="ambient-glow-purple"></div>
+  <div class="main-wrapper">
 
-    <!-- Glowing Star Sparkles (✦) -->
-    <div class="sparkle-field">
-      <div class="sparkle s1">✦</div>
-      <div class="sparkle s2">✦</div>
-      <div class="sparkle s3">✦</div>
-      <div class="sparkle s4">✦</div>
-      <div class="sparkle s5">✦</div>
-    </div>
+    <!-- Mobile screen container -->
+    <div class="video-canvas">
+      
+      <!-- Animated Light Assets -->
+      <div class="ambient-glow-gold"></div>
+      <div class="ambient-glow-purple"></div>
 
-    <!-- TOP HEADER: Branding (Persistent) -->
-    <div class="persistent-header">
-      <img class="persistent-logo-img" src="/logo.webp" alt="VNG Logo">
-      <div class="persistent-logo-text">VIP NUMBER <span>GARAGE</span></div>
-    </div>
-
-    <!-- MIDDLE VIEWPORT: Dynamic Content Zone -->
-    <div class="scene-content">
-
-      <!-- SCENE 1: THE HOOK (0s - 3s) -->
-      <div class="scene-element scene-1">
-        <div class="scene-top-tag">✦ Brand Power ✦</div>
-        <h1 class="title-large">IS YOUR BRAND<br><span class="gold-shimmer-text highlight-gold">STANDOUT?</span></h1>
-        <div class="tagline-sub">Your mobile number is the first thing clients see. Make it unforgettable.</div>
+      <!-- Glowing Star Sparkles (✦) -->
+      <div class="sparkle-field">
+        <div class="sparkle s1">✦</div>
+        <div class="sparkle s2">✦</div>
+        <div class="sparkle s3">✦</div>
+        <div class="sparkle s4">✦</div>
+        <div class="sparkle s5">✦</div>
       </div>
 
-      <!-- SCENE 2: THE NUMBER (3s - 7s) -->
-      <div class="scene-element scene-2">
-        <div class="scene-top-tag">✦ Exclusive Find ✦</div>
-        <div class="vip-glass-card">
-          <span class="badge-premium">ROYALTY SERIES</span>
-          <div class="number-display">
-            <span class="dim-part">99999-</span><span class="gold-highlight">00007</span>
+      <!-- TOP HEADER: Branding (Persistent) -->
+      <div class="persistent-header">
+        <img class="persistent-logo-img" src="/logo.webp" alt="VNG Logo">
+        <div class="persistent-logo-text">VIP NUMBER <span>GARAGE</span></div>
+      </div>
+
+      <!-- MIDDLE VIEWPORT: Dynamic Content Zone -->
+      <div class="scene-content">
+
+        <!-- SCENE 1: THE HOOK (0s - 3s) -->
+        <div class="scene-element scene-1">
+          <div class="scene-top-tag">✦ Brand Power ✦</div>
+          <h1 class="title-large">IS YOUR BRAND<br><span class="gold-shimmer-text highlight-gold">STANDOUT?</span></h1>
+          <div class="tagline-sub">Your mobile number is the first thing clients see. Make it unforgettable.</div>
+        </div>
+
+        <!-- SCENE 2: THE NUMBER (3s - 7s) -->
+        <div class="scene-element scene-2">
+          <div class="scene-top-tag">✦ Exclusive Find ✦</div>
+          <div class="vip-glass-card">
+            <span class="badge-premium">ROYALTY SERIES</span>
+            <div class="number-display">
+              <span class="dim-part">99999-</span><span class="gold-highlight">00007</span>
+            </div>
+            <div class="tagline-sub" style="color: #bf953f; font-weight: 600; font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 2px;">James Bond Style Ending</div>
           </div>
-          <div class="tagline-sub" style="color: #bf953f; font-weight: 600; font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 2px;">James Bond Style Ending</div>
-        </div>
-        <div class="price-tag-container">
-          <span class="price-label">Price & Details</span>
-          <div class="price-tag">Comment "VIP" for Price</div>
-        </div>
-        <div class="feature-bullets-container">
-          <span class="feature-bullet">Jio/Airtel/Vi</span>
-          <span class="feature-bullet">Safe, Trusted</span>
-        </div>
-      </div>
-
-      <!-- SCENE 3: TRUST SECURITY (7s - 10s) -->
-      <div class="scene-element scene-3">
-        <div class="scene-top-tag">✦ Client Safety ✦</div>
-        <div class="secure-warning-card">
-          <h3>⚠️ SECURITY NOTICE</h3>
-          <div class="tagline-sub" style="color: #e2e2e8; font-size: 0.85rem; margin-bottom: 15px;">
-            We only conduct business through our official contact numbers:
+          <div class="price-tag-container">
+            <span class="price-label">Price & Details</span>
+            <div class="price-tag" style="font-size: 1.15rem; padding: 10px 20px; font-weight: 600;">Comment "VIP" for Price</div>
           </div>
-          <span class="official-num" style="color: #bf953f;">+91 98555-98544</span>
-          <span class="official-num" style="color: #bf953f;">+91 76900-00070</span>
+          <div class="feature-bullets-container">
+            <span class="feature-bullet">Jio/Airtel/Vi</span>
+            <span class="feature-bullet">Safe, Trusted</span>
+          </div>
         </div>
-        <div class="tagline-sub" style="font-size: 0.8rem; color: #77777d; margin-top: 25px;">Avoid dealing with third-party agents.</div>
+
+        <!-- SCENE 3: TRUST SECURITY (7s - 10s) -->
+        <div class="scene-element scene-3">
+          <div class="scene-top-tag">✦ Client Safety ✦</div>
+          <div class="secure-warning-card">
+            <h3>⚠️ SECURITY NOTICE</h3>
+            <div class="tagline-sub" style="color: #e2e2e8; font-size: 0.85rem; margin-bottom: 15px;">
+              We only conduct business through our official contact numbers:
+            </div>
+            <span class="official-num" style="color: #bf953f;">+91 98555-98544</span>
+            <span class="official-num" style="color: #bf953f;">+91 76900-00070</span>
+          </div>
+          <div class="tagline-sub" style="font-size: 0.8rem; color: #77777d; margin-top: 25px;">Avoid dealing with third-party agents.</div>
+        </div>
+
+        <!-- SCENE 4: CALL TO ACTION TEXT (10s - 12s) -->
+        <div class="scene-element scene-4">
+          <div class="scene-top-tag">✦ Limited Time ✦</div>
+          <h1 class="title-large">COMMENT <span class="gold-shimmer-text highlight-gold">"VIP"</span><br>FOR PRICE & LINK</h1>
+          <div class="tagline-sub" style="color: #ffffff; font-weight: 400; margin-bottom: 25px;">Reserve this exclusive number today.</div>
+        </div>
+
       </div>
 
-      <!-- SCENE 4: CALL TO ACTION TEXT (10s - 12s) -->
-      <div class="scene-element scene-4">
-        <div class="scene-top-tag">✦ Limited Time ✦</div>
-        <h1 class="title-large">COMMENT <span class="gold-shimmer-text highlight-gold">"VIP"</span><br>FOR PRICE & LINK</h1>
-        <div class="tagline-sub" style="color: #ffffff; font-weight: 400; margin-bottom: 25px;">Reserve this exclusive number today.</div>
+      <!-- BOTTOM FOOTER: Call to action button (Appears in Scene 4) -->
+      <div class="persistent-footer">
+        <button class="footer-action-btn scene-4-active-footer">GET IT NOW</button>
       </div>
 
     </div>
 
-    <!-- BOTTOM FOOTER: Call to action button (Appears in Scene 4) -->
-    <div class="persistent-footer">
-      <button class="footer-action-btn scene-4-active-footer">GET IT NOW</button>
+    <!-- CONTROL PANEL (Excluded from video recording bounds) -->
+    <div class="control-panel">
+      <h2>🎥 Export Reel</h2>
+      <p>Download a perfectly cropped, high-resolution 9:16 vertical video of this loop automatically.</p>
+      
+      <button id="export-btn" class="export-btn" onclick="startExport()">Export 9:16 Video</button>
+      <div id="status-bar" class="status-bar">Status: Ready</div>
+      
+      <div class="steps">
+        <strong>How to download:</strong>
+        <ol>
+          <li>Click the button above.</li>
+          <li>Select <strong>"This Tab"</strong> (or "Chrome Tab") in the popup.</li>
+          <li>Wait exactly 12 seconds while it records.</li>
+          <li>The cropped video will save automatically!</li>
+        </ol>
+      </div>
     </div>
 
   </div>
+
+  <!-- Dynamic Export & Canvas Cropping Script -->
+  <script>
+    async function startExport() {
+      const exportBtn = document.getElementById('export-btn');
+      const statusBar = document.getElementById('status-bar');
+      
+      try {
+        statusBar.textContent = "Status: Initializing...";
+        statusBar.style.color = "#d4af37";
+
+        // 1. Request tab capture stream
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: {
+            displaySurface: "browser"
+          },
+          audio: false
+        });
+
+        statusBar.textContent = "Status: Recording (12s)...";
+        statusBar.style.color = "#4caf50";
+        exportBtn.disabled = true;
+        exportBtn.style.opacity = "0.5";
+
+        // 2. Play stream inside a hidden video tag to draw to canvas
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        video.muted = true;
+        await video.play();
+
+        // 3. Create high-resolution export canvas (1080x1920 Full HD Vertical)
+        const canvas = document.createElement('canvas');
+        canvas.width = 1080;
+        canvas.height = 1920;
+        const ctx = canvas.getContext('2d');
+
+        // Target the active 9:16 frame bounding rect
+        const videoCanvasElement = document.querySelector('.video-canvas');
+        
+        let animationFrameId;
+
+        function drawFrame() {
+          if (stream.active) {
+            const rect = videoCanvasElement.getBoundingClientRect();
+            
+            // Calculate scale multipliers (handles page zooms and high DPI/Retina displays)
+            const scaleX = video.videoWidth / window.innerWidth;
+            const scaleY = video.videoHeight / window.innerHeight;
+            
+            // Map viewport coordinates to stream pixel space
+            const cropX = rect.left * scaleX;
+            const cropY = rect.top * scaleY;
+            const cropW = rect.width * scaleX;
+            const cropH = rect.height * scaleY;
+
+            // Draw only the cropped rectangle onto the canvas
+            ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, canvas.width, canvas.height);
+            animationFrameId = requestAnimationFrame(drawFrame);
+          }
+        }
+
+        // Start crop-drawing loop
+        drawFrame();
+
+        // 4. Capture the canvas stream at 30 FPS and set up MediaRecorder
+        const canvasStream = canvas.captureStream(30);
+        let options = { mimeType: 'video/webm;codecs=vp9' };
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+          options = { mimeType: 'video/webm;codecs=h264' };
+        }
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+          options = { mimeType: 'video/webm' };
+        }
+
+        const chunks = [];
+        const recorder = new MediaRecorder(canvasStream, options);
+
+        recorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) {
+            chunks.push(e.data);
+          }
+        };
+
+        recorder.onstop = () => {
+          // Clean up running tasks
+          cancelAnimationFrame(animationFrameId);
+          stream.getTracks().forEach(track => track.stop());
+          video.pause();
+
+          statusBar.textContent = "Status: Saving Video...";
+          statusBar.style.color = "#d4af37";
+
+          // Generate file download
+          const blob = new Blob(chunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'VNG_Reel_99999-00007.webm';
+          a.click();
+          URL.revokeObjectURL(url);
+
+          statusBar.textContent = "Status: Completed!";
+          statusBar.style.color = "#4caf50";
+          exportBtn.disabled = false;
+          exportBtn.style.opacity = "1";
+        };
+
+        // Start and record for exactly 12 seconds (one loop)
+        recorder.start();
+        setTimeout(() => {
+          if (recorder.state !== "inactive") {
+            recorder.stop();
+          }
+        }, 12000);
+
+      } catch (err) {
+        console.error("Export failed: ", err);
+        statusBar.textContent = "Status: Failed";
+        statusBar.style.color = "#f44336";
+        exportBtn.disabled = false;
+        exportBtn.style.opacity = "1";
+        alert("Export cancelled or failed. Please select 'This Tab' in the popup to proceed!");
+      }
+    }
+  </script>
 
 </body>
 </html>
