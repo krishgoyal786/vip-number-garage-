@@ -1110,7 +1110,7 @@ function App() {
         <div className="footer-container">
           <div className="footer-col footer-brand">
             <div className="footer-logo-container" onClick={() => scrollToSection('home')}>
-              <img src="/logo.jpg" alt="VNG Logo" className="footer-logo-img" />
+              <img src="/logo.webp" alt="VNG Logo" className="footer-logo-img" />
               <div className="footer-logo-text">
                 VipNumber<span className="gold-text">Garage</span>
               </div>

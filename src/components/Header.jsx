@@ -50,7 +50,7 @@ const Header = ({ onLoginClick, onCartClick, cartCount, user, onLogout, onNaviga
       <div className="header-inner">
         <div className="logo-container" onClick={() => handleNavClick('home')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <img 
-            src="/logo.jpg" 
+            src="/logo.webp" 
             alt="VNG Logo" 
             className="header-logo-img" 
             style={{ 
