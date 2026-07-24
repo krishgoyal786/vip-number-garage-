@@ -18,9 +18,9 @@ const slides = [
   },
   {
     image: '/banner-security.jpg',
-    title: 'COMPATIBLE WITH ALL OPERATORS',
-    subtitle: 'Get instant Unique Porting Codes (UPC) for Jio, Airtel, Vi, or BSNL with 100% secure escrow and money-back assurance.',
-    buttonText: 'Search VIP Numbers',
+    title: 'COMPATIBLE WITH ALL NETWORKS',
+    subtitle: 'Secure your dream mobile identity today! Instant Unique Porting Codes (UPC) generated for Jio, Airtel, Vi, or BSNL with 100% safe escrow.',
+    buttonText: 'Claim Your VIP Number',
     targetId: 'vip-numbers-list'
   }
 ];
