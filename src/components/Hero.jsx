@@ -7,7 +7,7 @@ const slides = [
     title: "INDIA'S #1 VIP NUMBER STORE",
     subtitle: 'Over 19 Years of Trust & 2 Lakhs+ Happy Customers. Search premium patterns, double-triplets, & royalty sequences instantly.',
     buttonText: 'Search VIP Numbers',
-    targetId: 'our-products'
+    targetId: 'vip-numbers-list'
   },
   {
     image: '/banner-numerology.jpg',
@@ -20,8 +20,8 @@ const slides = [
     image: '/banner-security.jpg',
     title: 'COMPATIBLE WITH ALL OPERATORS',
     subtitle: 'Get instant Unique Porting Codes (UPC) for Jio, Airtel, Vi, or BSNL with 100% secure escrow and money-back assurance.',
-    buttonText: 'Request Custom Number',
-    targetId: 'request-number'
+    buttonText: 'Search VIP Numbers',
+    targetId: 'vip-numbers-list'
   }
 ];
 

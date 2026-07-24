@@ -970,14 +970,16 @@ function App() {
                 searchCriteria.excludeDigits !== '') && (
                 <div style={{ textAlign: 'center', marginBottom: '20px' }}><button onClick={resetAllFilters} className="clear-search-btn">Reset All Filters</button></div>
               )}
-              <NumberList 
-                numbers={catalogNumbers} 
-                onAddToCart={addToCart} 
-                onBuyNow={handleBuyNow} 
-                cartItems={cartItems} 
-                onCompareToggle={handleCompareToggle}
-                compareItems={compareItems}
-              />
+              <div id="vip-numbers-list">
+                <NumberList 
+                  numbers={catalogNumbers} 
+                  onAddToCart={addToCart} 
+                  onBuyNow={handleBuyNow} 
+                  cartItems={cartItems} 
+                  onCompareToggle={handleCompareToggle}
+                  compareItems={compareItems}
+                />
+              </div>
               {catalogNumbers.length < totalNumbers && (
                 <div className="view-more-container">
                   <p className="view-more-note">Click below to discover more premium VIP numbers</p>
