@@ -300,14 +300,14 @@
     margin-bottom: 25px;
   }
   .hero-slide {
-    background-position: 70% center; /* Shift banner image left to keep graphic in frame */
+    background-position: 80% center; /* Push background graphic toward the edge to clear the text */
   }
   .hero-slide-overlay {
-    /* Use a vertical gradient on mobile to enhance text contrast without obscuring the side graphic */
+    /* Dim the background graphic on tablets to act as a soft watermark, preventing text-clashing */
     background: linear-gradient(
       to bottom,
-      rgba(10, 10, 10, 0.45) 0%,
-      rgba(10, 10, 10, 0.88) 100%
+      rgba(10, 10, 10, 0.7) 0%,
+      rgba(10, 10, 10, 0.92) 100%
     );
   }
   .hero-slide-content {
@@ -365,14 +365,15 @@
   }
   
   .hero-slide {
-    background-position: 75% center;
+    background-position: 85% center; /* Shift the graphic toward the right edge on mobile screens */
   }
   
   .hero-slide-overlay {
+    /* Darker wash on mobile viewports for perfect legibility over centered text */
     background: linear-gradient(
       to bottom,
-      rgba(10, 10, 10, 0.45) 0%,
-      rgba(10, 10, 10, 0.9) 100%
+      rgba(10, 10, 10, 0.78) 0%,
+      rgba(10, 10, 10, 0.96) 100%
     );
   }
   
