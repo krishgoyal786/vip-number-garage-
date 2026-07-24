@@ -296,8 +296,19 @@
 
 @media (max-width: 768px) {
   .hero-slider-container {
-    height: 430px;
+    height: 420px;
     margin-bottom: 25px;
+  }
+  .hero-slide {
+    background-position: 70% center; /* Shift banner image left to keep graphic in frame */
+  }
+  .hero-slide-overlay {
+    /* Use a vertical gradient on mobile to enhance text contrast without obscuring the side graphic */
+    background: linear-gradient(
+      to bottom,
+      rgba(10, 10, 10, 0.45) 0%,
+      rgba(10, 10, 10, 0.88) 100%
+    );
   }
   .hero-slide-content {
     margin-left: 0;
@@ -306,12 +317,12 @@
     padding: 0 40px;
   }
   .hero-slide-title {
-    font-size: 1.9rem;
+    font-size: 1.8rem;
     letter-spacing: 2px;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
   }
   .hero-slide-subtitle {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     margin-bottom: 25px;
     margin-left: auto;
     margin-right: auto;
@@ -348,38 +359,101 @@
 
 @media (max-width: 520px) {
   .hero-slider-container {
-    height: 400px;
+    height: 360px;
+  }
+  .hero-slide {
+    background-position: 75% center;
   }
   .hero-slide-content {
     padding: 0 20px;
   }
   .hero-slide-title {
-    font-size: 1.6rem;
+    font-size: 1.45rem;
     letter-spacing: 1px;
+    margin-bottom: 10px;
   }
   .hero-slide-subtitle {
-    font-size: 0.88rem;
-    line-height: 1.6;
+    font-size: 0.84rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    max-width: 300px;
   }
   .slider-arrow {
-    display: none; /* Hide arrows on small mobile devices to maximize space */
+    display: none; /* Hide arrows to save space */
   }
   .hero-floating-stats {
     flex-wrap: wrap;
-    gap: 8px 12px;
+    gap: 6px 10px;
     justify-content: center;
-    padding: 10px;
+    padding: 8px 10px;
   }
   .stat-divider {
-    display: none; /* Hide dividers and let wrapping handle structure */
+    display: none;
   }
   .stat-item {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 3px 8px;
     border-radius: 4px;
-    border: 1px solid rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.08);
   }
   .slider-dots {
-    bottom: 95px; /* Push dots up slightly since stats wrap */
+    bottom: 85px;
+  }
+}
+
+@media (max-width: 380px) {
+  /* Targeted styling specifically for iPhone SE size */
+  .hero-slider-container {
+    height: 310px;
+  }
+  .hero-slide {
+    background-position: right center; /* Ensure the focal graphic element on the right stays fully visible */
+  }
+  .hero-slide-content {
+    padding: 0 12px;
+    top: 42%;
+  }
+  .hero-slide-title {
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .hero-slide-subtitle {
+    font-size: 0.76rem;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    max-width: 250px;
+  }
+  .hero-slide-cta {
+    padding: 8px 20px;
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+  }
+  .slider-dots {
+    bottom: 70px;
+    gap: 8px;
+  }
+  .slider-dot {
+    width: 5px;
+    height: 5px;
+  }
+  .slider-dot.active {
+    width: 12px;
+  }
+  .hero-floating-stats {
+    padding: 6px;
+    gap: 4px;
+  }
+  .stat-item {
+    padding: 2px 6px;
+    font-size: 0.6rem;
+  }
+  .stat-icon {
+    font-size: 0.85rem;
+  }
+  .stat-text {
+    font-size: 0.56rem;
+    letter-spacing: 0.2px;
+    font-weight: 500;
   }
 }
