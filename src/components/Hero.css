@@ -411,7 +411,7 @@
   }
   .hero-slide-content {
     padding: 0 12px;
-    top: 42%;
+    margin-top: -15px; /* Offset the stats bar height to center text in active viewport */
   }
   .hero-slide-title {
     font-size: 1.25rem;
