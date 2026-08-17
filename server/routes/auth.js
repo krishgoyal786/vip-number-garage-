@@ -40,18 +40,21 @@ router.post('/send-otp', async (req, res) => {
           user: smtpUser,
           pass: smtpPass
         },
+        family: 4, // Force IPv4 to prevent ENETUNREACH errors on servers with disabled IPv6
         connectionTimeout: 5000,
         greetingTimeout: 5000,
         socketTimeout: 5000
       };
 
-      if (smtpHost.includes('gmail.com')) {
+      // Only use the shortcut service configuration for Gmail if not using port 587 STARTTLS
+      if (smtpHost.includes('gmail.com') && smtpPort !== '587') {
         transportConfig = {
           service: 'gmail',
           auth: {
             user: smtpUser,
             pass: smtpPass
           },
+          family: 4,
           connectionTimeout: 5000,
           greetingTimeout: 5000,
           socketTimeout: 5000
