@@ -18,11 +18,16 @@ const sendNotification = async ({ to, message, channels = ['sms', 'whatsapp'] })
 
   const hasTwilio = accountSid && authToken;
 
-  // Ensure phone numbers have the "+" prefix for international format
-  let formattedTo = to.trim();
-  if (!formattedTo.startsWith('+')) {
-    formattedTo = `+${formattedTo}`;
+  // Clean all non-digit characters (remove spaces, dashes, etc.)
+  let cleaned = to.replace(/\D/g, '');
+  
+  // If the number is a 10-digit Indian mobile number, prepend the 91 country code
+  if (cleaned.length === 10) {
+    cleaned = `91${cleaned}`;
   }
+  
+  // Prepend '+' for Twilio E.164 format
+  let formattedTo = `+${cleaned}`;
 
   for (const channel of channels) {
     if (channel === 'sms') {

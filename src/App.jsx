@@ -209,39 +209,6 @@ function App() {
     setVisibleCount(20);
   }, [activeCategory, searchCriteria]);
 
-  useEffect(() => {
-    if (!token) return;
-
-    // Inactivity timer check (2 hours = 7200000 ms)
-    const updateActivity = () => {
-      localStorage.setItem('vip_last_activity', Date.now().toString());
-    };
-
-    window.addEventListener('mousemove', updateActivity);
-    window.addEventListener('click', updateActivity);
-    window.addEventListener('scroll', updateActivity);
-    window.addEventListener('keydown', updateActivity);
-    window.addEventListener('touchstart', updateActivity);
-
-    // Periodically check inactivity (every 30 seconds)
-    const checkInterval = setInterval(() => {
-      const lastActivity = localStorage.getItem('vip_last_activity');
-      if (lastActivity && Date.now() - parseInt(lastActivity) > 2 * 60 * 60 * 1000) {
-        handleLogout();
-        alert("You have been logged out due to 2 hours of inactivity.");
-      }
-    }, 30000);
-
-    return () => {
-      window.removeEventListener('mousemove', updateActivity);
-      window.removeEventListener('click', updateActivity);
-      window.removeEventListener('scroll', updateActivity);
-      window.removeEventListener('keydown', updateActivity);
-      window.removeEventListener('touchstart', updateActivity);
-      clearInterval(checkInterval);
-    };
-  }, [token]);
-
   const logActivity = async (action, details = '') => {
     try {
       await fetch(`${API_BASE_URL}/activities`, {
@@ -327,6 +294,39 @@ function App() {
     localStorage.removeItem('vip_last_activity');
     setView('home');
   };
+
+  useEffect(() => {
+    if (!token) return;
+
+    // Inactivity timer check (2 hours = 7200000 ms)
+    const updateActivity = () => {
+      localStorage.setItem('vip_last_activity', Date.now().toString());
+    };
+
+    window.addEventListener('mousemove', updateActivity);
+    window.addEventListener('click', updateActivity);
+    window.addEventListener('scroll', updateActivity);
+    window.addEventListener('keydown', updateActivity);
+    window.addEventListener('touchstart', updateActivity);
+
+    // Periodically check inactivity (every 30 seconds)
+    const checkInterval = setInterval(() => {
+      const lastActivity = localStorage.getItem('vip_last_activity');
+      if (lastActivity && Date.now() - parseInt(lastActivity) > 2 * 60 * 60 * 1000) {
+        handleLogout();
+        alert("You have been logged out due to 2 hours of inactivity.");
+      }
+    }, 30000);
+
+    return () => {
+      window.removeEventListener('mousemove', updateActivity);
+      window.removeEventListener('click', updateActivity);
+      window.removeEventListener('scroll', updateActivity);
+      window.removeEventListener('keydown', updateActivity);
+      window.removeEventListener('touchstart', updateActivity);
+      clearInterval(checkInterval);
+    };
+  }, [token]);
 
   const resetAllFilters = () => {
     setActiveCategory('All');
@@ -1053,6 +1053,7 @@ function App() {
             onDeleteConsultation={handleDeleteConsultation}
             onToggleSoldStatus={handleToggleSoldStatus}
             onDeliverOrder={handleDeliverOrder}
+            onLogout={handleLogout}
             onClose={() => setView('home')} 
           />
         ) : view === 'privacy' ? (

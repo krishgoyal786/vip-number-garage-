@@ -29,13 +29,6 @@ const Hero = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      handleNext();
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
   const handleNext = () => {
     if (isAnimating) return;
     setIsAnimating(true);
@@ -56,6 +49,13 @@ const Hero = () => {
     setActiveIndex(index);
     setTimeout(() => setIsAnimating(false), 800);
   };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      handleNext();
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);

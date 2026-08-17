@@ -46,6 +46,20 @@ const CheckoutForm = ({ user, totalAmount, onSubmit, onCancel, onPrivacyClick, o
       alert("Please accept the Privacy Policy and Terms & Conditions to complete your purchase.");
       return;
     }
+    if (details.name.trim().length < 2) {
+      alert("Please enter your full name (at least 2 characters).");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(details.email.trim())) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+    const phoneDigits = details.phone.replace(/\D/g, '');
+    if (phoneDigits.length !== 10) {
+      alert("Please enter a valid 10-digit mobile number.");
+      return;
+    }
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {

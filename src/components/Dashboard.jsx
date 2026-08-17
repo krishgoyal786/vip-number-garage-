@@ -29,6 +29,7 @@ const Dashboard = ({
   consultations = [], onUpdateConsultation, onDeleteConsultation,
   onToggleSoldStatus,
   onDeliverOrder,
+  onLogout,
   onClose 
 }) => {
   const [activeTab, setActiveTab] = useState('inventory');
@@ -188,6 +189,19 @@ const Dashboard = ({
         <div className="header-right">
           <input type="text" placeholder={`Search in ${activeTab}...`} className="dash-search-input" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
           <button className="exit-btn" onClick={onClose}>Exit Dashboard</button>
+          {onLogout && (
+            <button 
+              className="exit-btn" 
+              style={{ borderColor: '#ff4d4d', color: '#ff4d4d' }} 
+              onClick={() => {
+                if (window.confirm("Are you sure you want to logout?")) {
+                  onLogout();
+                }
+              }}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
 

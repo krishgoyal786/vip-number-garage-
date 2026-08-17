@@ -62,12 +62,14 @@ router.get('/', async (req, res) => {
       ];
     }
 
+    const cleanNumberQuery = {};
+
     // 4. Exclude Digits
     if (excludeDigits && excludeDigits.trim() !== '') {
       const excludedArray = excludeDigits.replace(/[^0-9]/g, '').split('');
       if (excludedArray.length > 0) {
         const regexStr = excludedArray.join('|');
-        query.cleanNumber = { $not: new RegExp(regexStr) };
+        cleanNumberQuery.$not = new RegExp(regexStr);
       }
     }
 
@@ -89,8 +91,12 @@ router.get('/', async (req, res) => {
           }
         });
         regexPattern += '$';
-        query.cleanNumber = { $regex: new RegExp(regexPattern) };
+        cleanNumberQuery.$regex = new RegExp(regexPattern);
       }
+    }
+
+    if (Object.keys(cleanNumberQuery).length > 0) {
+      query.cleanNumber = cleanNumberQuery;
     }
 
     // Sort order
@@ -162,17 +168,26 @@ router.post('/bulk', adminAuth, upload.single('file'), (req, res) => {
         results.forEach((row, index) => {
           const rowNum = index + 2; // Data rows start at line 2
 
+          // Check if the entire row is empty (all values are empty or only whitespace)
+          const isEmptyRow = Object.values(row).every(val => !val || String(val).trim() === '');
+          if (isEmptyRow) {
+            return; // Skip empty trailing rows silently
+          }
+
           const getVal = (possibleKeys) => {
-            const foundKey = Object.keys(row).find(k => possibleKeys.includes(k.trim().toLowerCase()));
+            const foundKey = Object.keys(row).find(k => {
+              const cleanKey = k.replace(/^\uFEFF/, '').trim().toLowerCase();
+              return possibleKeys.includes(cleanKey);
+            });
             return foundKey ? row[foundKey] : undefined;
           };
 
-          const rawNum = getVal(['number', 'phone', 'mobile']);
-          const pr = getVal(['price', 'original price', 'mrp']);
-          const offPr = getVal(['offerprice', 'offer price', 'discount price']);
-          const cat = getVal(['category', 'type', 'style']);
-          const oper = getVal(['operator', 'carrier', 'company', 'network']);
-          const desc = getVal(['description', 'details', 'info']);
+          const rawNum = getVal(['number', 'phone', 'mobile', 'numbers', 'mobiles', 'contact', 'contacts', 'mobile number', 'phone number', 'vip number', 'vip numbers']);
+          const pr = getVal(['price', 'original price', 'mrp', 'rate', 'amount']);
+          const offPr = getVal(['offerprice', 'offer price', 'discount price', 'discount', 'sale price']);
+          const cat = getVal(['category', 'type', 'style', 'group']);
+          const oper = getVal(['operator', 'carrier', 'company', 'network', 'sim', 'provider']);
+          const desc = getVal(['description', 'details', 'info', 'desc', 'about']);
 
           if (!rawNum) {
             errors.push(`Row ${rowNum}: Missing number/phone column.`);
@@ -185,13 +200,17 @@ router.post('/bulk', adminAuth, upload.single('file'), (req, res) => {
             return;
           }
 
-          const priceVal = parseInt(pr);
+          // Clean commas, currency symbols, and spaces from price
+          const cleanPrice = pr ? String(pr).replace(/[^0-9]/g, '').trim() : '';
+          const priceVal = parseInt(cleanPrice);
           if (isNaN(priceVal) || priceVal <= 0) {
             errors.push(`Row ${rowNum}: Invalid or missing original price '${pr}'.`);
             return;
           }
 
-          const offerPriceVal = offPr ? parseInt(offPr) : undefined;
+          // Clean commas, currency symbols, and spaces from offer price
+          const cleanOfferPrice = offPr ? String(offPr).replace(/[^0-9]/g, '').trim() : '';
+          const offerPriceVal = offPr && cleanOfferPrice ? parseInt(cleanOfferPrice) : undefined;
           if (offPr && (isNaN(offerPriceVal) || offerPriceVal < 0)) {
             errors.push(`Row ${rowNum}: Invalid offer price '${offPr}'.`);
             return;
@@ -203,8 +222,14 @@ router.post('/bulk', adminAuth, upload.single('file'), (req, res) => {
           }
           seenNumbers.add(cleanNum);
 
+          const cleanNumStr = rawNum.replace(/\D/g, '');
+          const sum = cleanNumStr.split('').reduce((acc, d) => acc + parseInt(d), 0);
+          const singleDigitSum = sum === 0 ? 0 : (sum - 1) % 9 + 1;
+
           formattedData.push({
             number: rawNum.trim(),
+            cleanNumber: cleanNumStr,
+            singleDigitSum: singleDigitSum,
             price: priceVal,
             offerPrice: offerPriceVal,
             category: (cat || 'General').trim(),

@@ -66,6 +66,21 @@ const PositionalSearch = ({ searchCriteria, onSearch }) => {
 
   const handleSearch = () => {
     onSearch({ digits, budget, sort, carrier, numerologySum, excludeDigits });
+    
+    // Smoothly scroll down to the VIP numbers list so the user sees the output
+    setTimeout(() => {
+      const element = document.getElementById('vip-numbers-list');
+      if (element) {
+        const headerOffset = 120; // Account for the sticky header height
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 150);
   };
 
   const handleClear = () => {

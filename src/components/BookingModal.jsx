@@ -199,6 +199,20 @@ const BookingModal = ({ isOpen, onClose, onBook, user }) => {
         alert("Please fill all birth and contact details.");
         return;
       }
+      if (formData.customerName.trim().length < 2) {
+        alert("Please enter a valid full name (at least 2 characters).");
+        return;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email.trim())) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+      const phoneDigits = formData.phone.replace(/\D/g, '');
+      if (phoneDigits.length !== 10) {
+        alert("Please enter a valid 10-digit WhatsApp number.");
+        return;
+      }
       setStep(2);
     } else if (step === 2) {
       if (!formData.bookingDate || !formData.bookingSlot) {
