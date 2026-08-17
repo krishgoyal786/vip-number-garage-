@@ -87,10 +87,10 @@ router.post('/send-otp', async (req, res) => {
         if (process.env.NODE_ENV === 'production') {
           return res.status(500).json({ message: 'Failed to send OTP email. Please try again later.' });
         }
+        console.log(`[Dev Mode Fallback] OTP for ${email}: ${otp}`);
         return res.json({ 
           message: 'OTP sent successfully (Simulated mode due to host mail restriction)', 
-          simulated: true,
-          otp: otp 
+          simulated: true
         });
       }
     } else {
@@ -107,8 +107,7 @@ router.post('/send-otp', async (req, res) => {
       
       res.json({ 
         message: 'OTP sent successfully (Simulated mode)', 
-        simulated: true,
-        otp: otp 
+        simulated: true
       });
     }
   } catch (err) {

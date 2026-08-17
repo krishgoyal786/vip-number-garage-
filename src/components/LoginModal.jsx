@@ -50,32 +50,25 @@ const LoginModal = ({ isOpen, onClose, onLogin, onSendOtp }) => {
 
     setIsLoading(true);
     // Call backend OTP send
-    const result = await onSendOtp(email);
+    const success = await onSendOtp(email);
     setIsLoading(false);
     
-    if (result && result.success) {
+    if (success) {
       setStep(2);
       setResendCooldown(60);
       setSendCooldown(60);
-      if (result.simulated && result.otp) {
-        setOtp(result.otp);
-      }
     }
   };
 
   const handleResendOtp = async () => {
     if (resendCooldown > 0 || isLoading) return;
     setIsLoading(true);
-    const result = await onSendOtp(email);
+    const success = await onSendOtp(email);
     setIsLoading(false);
-    if (result && result.success) {
+    if (success) {
       setResendCooldown(60);
       setSendCooldown(60);
-      if (result.simulated && result.otp) {
-        setOtp(result.otp);
-      } else {
-        alert("A new OTP has been sent to your email.");
-      }
+      alert("A new OTP has been sent to your email.");
     }
   };
 

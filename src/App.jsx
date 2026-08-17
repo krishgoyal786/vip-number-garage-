@@ -228,20 +228,19 @@ function App() {
       });
       const data = await res.json();
       if (res.ok) {
-        if (data.simulated && data.otp) {
-          console.log(`[Dev Mode] OTP sent to ${email}: ${data.otp}`);
-          return { success: true, simulated: true, otp: data.otp };
+        if (data.simulated) {
+          console.log(`[Dev Mode] OTP simulated for ${email}. Check your server/backend terminal logs to see the code.`);
         } else {
           alert(`OTP sent successfully to ${email}`);
-          return { success: true, simulated: false };
         }
+        return true;
       } else {
         alert(data.message || "Failed to send OTP.");
-        return { success: false };
+        return false;
       }
     } catch (err) {
       alert("Error connecting to server to send OTP.");
-      return { success: false };
+      return false;
     }
   };
 
