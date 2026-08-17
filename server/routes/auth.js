@@ -2,8 +2,14 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const dns = require('dns');
 const User = require('../models/User');
 const Otp = require('../models/Otp');
+
+// Force Node.js to resolve IPv4 addresses first
+if (dns && typeof dns.setDefaultResultOrder === 'function') {
+  dns.setDefaultResultOrder('ipv4first');
+}
 
 // 1. Send OTP to email
 router.post('/send-otp', async (req, res) => {
